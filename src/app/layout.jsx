@@ -289,7 +289,6 @@ import { checkAuth } from '@/lib/auth'
 export default function RootLayout({ children }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const router = useRouter()
@@ -315,7 +314,6 @@ export default function RootLayout({ children }) {
 
       const publicRoutes = ['/', '/auth/login', '/auth/register']
       if (publicRoutes.includes(pathname)) {
-        setIsLoading(false)
         return
       }
 
@@ -344,26 +342,14 @@ export default function RootLayout({ children }) {
         return
       }
 
-      setIsLoading(false)
+     
     }
 
     verifyAuth()
   }, [pathname, router])
 
   /* -------------------- LOADING -------------------- */
-  if (isLoading) {
-    return (
-      <html lang="fr">
-        <body className="flex items-center justify-center h-screen bg-gray-50">
-          <div className="text-center">
-            <div className="w-14 h-14 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="mt-4 text-gray-600">Chargement...</p>
-          </div>
-        </body>
-      </html>
-    )
-  }
-
+ 
   /* -------------------- LAYOUT -------------------- */
   const hideSidebarRoutes = ['/auth/login', '/auth/register', '/']
   const showSidebar = !hideSidebarRoutes.includes(pathname)
