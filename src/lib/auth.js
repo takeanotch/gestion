@@ -1,3 +1,4 @@
+//lib/auth
 import bcrypt from 'bcryptjs'
 import { supabase } from './supabase'
 
