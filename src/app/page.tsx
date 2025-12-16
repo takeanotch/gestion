@@ -18,6 +18,7 @@
 //     </div>
 //   );
 // }
+'use client'
 // pages/index.jsx ou app/page.jsx (selon votre structure)
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation' // Pour Next.js 13+ App Router
