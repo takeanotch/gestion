@@ -101,9 +101,7 @@ export default function LoginPage() {
             Comptes de démonstration :
           </p>
           <div className="mt-2 space-y-1 text-sm">
-            <p><span className="font-medium">Super Admin:</span> superadmin@shop.com / superadmin123</p>
-            <p><span className="font-medium">Admin:</span> admin1@shop.com / admin123</p>
-            <p><span className="font-medium">Vendor:</span> vendor1@shop.com / vendor123</p>
+            <p><span className="font-medium">Super Admin:</span> nzana@gmail.com / 123Nzana</p>
           </div>
         </div>
       </div>
