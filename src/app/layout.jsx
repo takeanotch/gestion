@@ -390,7 +390,7 @@ export default function RootLayout({ children }) {
           )}
 
           {/* UN SEUL SCROLL */}
-          <main className="flex-1 overflow-auto overflow-x-hidden">
+          <main className="flex-1 overflow-auto overflow-x-hidden pb-9">
             
               {children}
          
