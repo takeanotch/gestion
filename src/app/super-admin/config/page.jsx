@@ -519,22 +519,117 @@
 //     </div>
 //   )
 // }
+
+
+// 'use client'
+
+// import { useState, useEffect, useRef } from 'react'
+// import CategoryManager from '@/components/CategoryManager'
+// import SupplierManager from '@/components/SupplierManager'
+// import SalesConfigTab from '@/components/SalesConfigTab'
+
+// export default function SalesConfigPage() {
+//   const [activeTab, setActiveTab] = useState('config')
+//   const [indicatorStyle, setIndicatorStyle] = useState({})
+//   const tabRefs = useRef({})
+
+//   const tabs = [
+//     { id: 'config', label: 'Configuration Ventes', component: <SalesConfigTab /> },
+//     { id: 'categories', label: 'Gestion Catégories', component: <CategoryManager /> },
+//     { id: 'suppliers', label: 'Gestion Fournisseurs', component: <SupplierManager /> }
+//   ]
+
+//   // Mettre à jour la position de l'indicateur quand l'onglet change
+//   useEffect(() => {
+//     if (tabRefs.current[activeTab]) {
+//       const activeElement = tabRefs.current[activeTab]
+//       const { offsetLeft, offsetWidth } = activeElement
+      
+//       setIndicatorStyle({
+//         left: `${offsetLeft}px`,
+//         width: `${offsetWidth}px`,
+//         opacity: 1
+//       })
+//     }
+//   }, [activeTab])
+
+//   const activeComponent = tabs.find(tab => tab.id === activeTab)?.component
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       <div className="max-w-7xl mx-auto p-4 md:p-6">
+//         {/* Header */}
+//         <div className="mb-6">
+//           <h1 className="text-2xl font-bold text-gray-900">Paramètres Ventes</h1>
+//           <p className="text-gray-600 mt-1">
+//             Gérez la configuration des ventes, catégories et fournisseurs
+//           </p>
+//         </div>
+
+//         {/* Tabs personnalisés avec indicateur animé */}
+//         <div className="w-full">
+//           <div className="relative border-b border-gray-200">
+//             <div className="flex space-x-8">
+//               {tabs.map((tab) => (
+//                 <button
+//                   key={tab.id}
+//                   ref={el => tabRefs.current[tab.id] = el}
+//                   onClick={() => setActiveTab(tab.id)}
+//                   className={`
+//                     px-1 py-4 text-base font-medium transition-all duration-300
+//                     focus:outline-none 
+//                     relative z-10
+//                     ${activeTab === tab.id 
+//                       ? 'text-blue-600 font-semibold' 
+//                       : 'text-gray-500 hover:text-gray-700'
+//                     }
+//                   `}
+//                 >
+//                   {tab.label}
+//                 </button>
+//               ))}
+//             </div>
+            
+//             {/* Indicateur animé */}
+//             <div 
+//               className="absolute bottom-0 h-0.5 outline-none bg-blue-600 transition-all duration-300 ease-out rounded-t-full"
+//               style={indicatorStyle}
+//             />
+//           </div>
+
+//           {/* Contenu avec transition */}
+//           <div className="mt-6">
+//             <div 
+//               key={activeTab}
+//               className="animate-fade-in"
+//               style={{ animationDuration: '0.3s' }}
+//             >
+//               {activeComponent}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import CategoryManager from '@/components/CategoryManager'
 import SupplierManager from '@/components/SupplierManager'
 import SalesConfigTab from '@/components/SalesConfigTab'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function SalesConfigPage() {
   const [activeTab, setActiveTab] = useState('config')
   const [indicatorStyle, setIndicatorStyle] = useState({})
   const tabRefs = useRef({})
+  const { t } = useLanguage()
 
   const tabs = [
-    { id: 'config', label: 'Configuration Ventes', component: <SalesConfigTab /> },
-    { id: 'categories', label: 'Gestion Catégories', component: <CategoryManager /> },
-    { id: 'suppliers', label: 'Gestion Fournisseurs', component: <SupplierManager /> }
+    { id: 'config', label: t('salesConfig'), component: <SalesConfigTab /> },
+    { id: 'categories', label: t('categoryManagement'), component: <CategoryManager /> },
+    { id: 'suppliers', label: t('supplierManagement'), component: <SupplierManager /> }
   ]
 
   // Mettre à jour la position de l'indicateur quand l'onglet change
@@ -558,9 +653,9 @@ export default function SalesConfigPage() {
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Paramètres Ventes</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('salesSettings')}</h1>
           <p className="text-gray-600 mt-1">
-            Gérez la configuration des ventes, catégories et fournisseurs
+            {t('manageSalesConfig')}
           </p>
         </div>
 

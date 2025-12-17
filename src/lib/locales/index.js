@@ -1,82 +1,18 @@
-// import { topbarTranslations } from './topbar';
-// import { usersTranslations } from './users';
-
-// // Ajoutez d'autres fichiers ici quand vous en créez
-// // import { productsTranslations } from './products';
-// // import { dashboardTranslations } from './dashboard';
-
-// // Toutes les traductions regroupées
-// export const translations = {
-//   topbar: topbarTranslations,
-//   users: usersTranslations,
-//   // Ajoutez ici
-//   // products: productsTranslations,
-//   // dashboard: dashboardTranslations,
-// };
-
-// // Fonction simple pour changer la langue
-// export function setLanguage(lang) {
-//   if (typeof window !== 'undefined') {
-//     localStorage.setItem('language', lang);
-//     window.dispatchEvent(new Event('languageChanged'));
-//   }
-// }
-
-// // Fonction simple pour récupérer la langue
-// export function getLanguage() {
-//   if (typeof window !== 'undefined') {
-//     return localStorage.getItem('language') || 'fr';
-//   }
-//   return 'fr';
-// }
-
-// // Fonction de traduction principale - SIMPLE !
-// export function t(key, page = 'common') {
-//   const lang = getLanguage();
-//   const pageTranslations = translations[page];
-  
-//   if (!pageTranslations) {
-//     console.warn(`Page "${page}" non trouvée dans les traductions`);
-//     return key;
-//   }
-  
-//   const translation = pageTranslations[lang]?.[key];
-//   return translation || key;
-// }
-
-// // Hook React simple
-// export function useTranslation(page = 'common') {
-//   const [language, setLanguageState] = React.useState(getLanguage());
-  
-//   React.useEffect(() => {
-//     const handleLanguageChange = () => {
-//       setLanguageState(getLanguage());
-//     };
-    
-//     window.addEventListener('languageChanged', handleLanguageChange);
-//     return () => window.removeEventListener('languageChanged', handleLanguageChange);
-//   }, []);
-  
-//   const changeLanguage = (lang) => {
-//     setLanguage(lang);
-//     setLanguageState(lang);
-//   };
-  
-//   const translate = (key) => t(key, page);
-  
-//   return {
-//     t: translate,
-//     language,
-//     changeLanguage
-//   };
-// }
-
-// // Exportez aussi chaque objet si besoin
-// export { topbarTranslations, usersTranslations };
 // Importez tous les fichiers de traduction
 import { commonTranslations } from './common';
 import { topbarTranslations } from './topbar';
 import { usersTranslations } from './users';
+import {salesConfigTranslations} from './sales_config'
+import {registerTranslations} from './register'
+import { addProductsTranslations} from './add_product'
+import { categoriesTranslations} from './categories'
+import { productsTranslations} from './products'
+import {salesTranslations} from './sales'
+import {productsTableTranslations} from './productsTableTranslations'
+import {newSaleTranslations} from './new_sale'
+import {sidebarTranslations} from './sideBar'
+import { clientsTranslations } from './clientsTranslations';
+import { reportsTranslations } from './reports';
 
 // Fusionnez TOUTES les traductions dans un seul objet comme avant
 const translations = {
@@ -87,6 +23,17 @@ const translations = {
     ...topbarTranslations.en,
     // Users
     ...usersTranslations.en,
+    ...salesConfigTranslations.en,
+    ...registerTranslations.en,
+    ...addProductsTranslations.en,
+    ...categoriesTranslations.en,
+    ...productsTranslations.en,
+    ...productsTableTranslations.en,
+    ...salesTranslations.en,
+    ...newSaleTranslations.en,
+    ...sidebarTranslations.en,
+    ...clientsTranslations.en,
+     ...reportsTranslations.en,
     // Ajoutez d'autres ici au même niveau
   },
   fr: {
@@ -96,6 +43,17 @@ const translations = {
     ...topbarTranslations.fr,
     // Users
     ...usersTranslations.fr,
+    ...salesConfigTranslations.fr,
+    ...registerTranslations.fr,
+    ...addProductsTranslations.fr,
+     ...categoriesTranslations.fr,
+     ...productsTranslations.fr,
+     ...productsTableTranslations.fr,
+     ...salesTranslations.fr,
+     ...newSaleTranslations.fr,
+     ...sidebarTranslations.fr,
+      ...clientsTranslations.fr,
+        ...reportsTranslations.fr
     // Ajoutez d'autres ici au même niveau
   }
 };
@@ -144,4 +102,4 @@ export function useTranslation() {
 }
 
 // Exportez aussi les objets individuels si besoin
-export { commonTranslations, topbarTranslations, usersTranslations };
+export {clientsTranslations,reportsTranslations, commonTranslations, addProductsTranslations ,newSaleTranslations,topbarTranslations,productsTranslations, usersTranslations ,salesTranslations,registerTranslations,sidebarTranslations,categoriesTranslations};
