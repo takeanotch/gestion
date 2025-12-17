@@ -579,7 +579,8 @@ import {
   HiChevronLeft,
   HiQuestionMarkCircle,
   HiLogout,
-  HiShoppingBag
+  HiShoppingBag,
+  HiCurrencyDollar
 } from 'react-icons/hi'
 import {
   LayoutDashboard,
@@ -714,6 +715,14 @@ export default function Sidebar({ onCollapse }) {
           title: 'Config Vente',
           icon: HiShoppingBag,
           href: '/super-admin/config',
+          roles: ['super-admin']
+        }
+        ,
+      
+        {
+          title: 'Rapport',
+          icon: HiCurrencyDollar,
+          href: '/super-admin/mouvement',
           roles: ['super-admin']
         }
       ],

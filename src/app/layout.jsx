@@ -285,7 +285,7 @@ import Sidebar from '@/components/SideBar'
 import TopBar from '@/components/TopBar'
 import { useRouter, usePathname } from 'next/navigation'
 import { checkAuth } from '@/lib/auth'
-
+import { LanguageProvider } from '@/contexts/LanguageContext'
 export default function RootLayout({ children }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -355,8 +355,10 @@ export default function RootLayout({ children }) {
   const showSidebar = !hideSidebarRoutes.includes(pathname)
 
   return (
+    
     <html lang="fr">
       <body className="flex h-screen overflow-hidden bg-white dark:bg-gray-900">
+<LanguageProvider>
 
         {/* SIDEBAR */}
         {showSidebar && (
@@ -396,6 +398,7 @@ export default function RootLayout({ children }) {
          
           </main>
         </div>
+</LanguageProvider>
 
       </body>
     </html>
