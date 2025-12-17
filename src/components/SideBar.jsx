@@ -578,7 +578,8 @@ import {
   HiCog,
   HiChevronLeft,
   HiQuestionMarkCircle,
-  HiLogout
+  HiLogout,
+  HiShoppingBag
 } from 'react-icons/hi'
 import {
   LayoutDashboard,
@@ -596,7 +597,8 @@ import {
   QrCode,
   UserCircle,
   ShoppingCart,
-  Package2
+  Package2,
+  CogIcon
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -694,9 +696,24 @@ export default function Sidebar({ onCollapse }) {
           roles: ['super-admin']
         },
         {
-          title: 'ventes',
+          title: 'Ventes',
           icon: ShoppingCart,
           href: '/super-admin/sales',
+          roles: ['super-admin']
+        },
+      
+        {
+          title: 'Shop',
+          icon: HiCog,
+          href: '/super-admin/shop',
+          roles: ['super-admin']
+        }
+        ,
+      
+        {
+          title: 'Config Vente',
+          icon: HiShoppingBag,
+          href: '/super-admin/config',
           roles: ['super-admin']
         }
       ],
