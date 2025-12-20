@@ -1413,6 +1413,7 @@ import {
   BarChart3,
   Users
 } from 'lucide-react'
+import Link from 'next/link'
 
 export default function VentesDashboard() {
   const router = useRouter()
@@ -1675,7 +1676,9 @@ export default function VentesDashboard() {
         {/* Header avec Tabs */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Tableau de bord des ventes</h1>
+            <Link href='/vendor/mouvement'>
+            <span className='bg-red-500 text-white p-2.5 rounded-2xl mb-3'>Creer une sortie</span>
+            </Link>
             <p className="text-gray-600">Bienvenue, {currentUser.full_name}!</p>
           </div>
           
