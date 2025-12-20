@@ -378,8 +378,8 @@ export default function RootLayout({ children }) {
               ? isMobile
                 ? 'ml-0'
                 : sidebarCollapsed
-                  ? 'ml-20'
-                  : 'ml-64'
+                  ? 'ml-18'
+                  : 'ml-16'
               : ''}
           `}
         >
