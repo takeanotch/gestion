@@ -43,6 +43,8 @@
 //   last_restocked: string | null;
 // };
 // lib/supabase.ts
+
+
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://ugzxfmfclutwnnbvbkqp.supabase.co';

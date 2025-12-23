@@ -540,6 +540,9 @@
 //     </div>
 //   );
 // }
+
+//components/ProductManager
+
 'use client';
 
 import { useState, useEffect } from 'react';

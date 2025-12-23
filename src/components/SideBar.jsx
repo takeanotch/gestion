@@ -1402,7 +1402,8 @@ import {
   User as UserIcon,
   Store as StoreIcon,
   BarChart3,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Printer
 } from 'lucide-react'
 
 export default function Sidebar() {
@@ -1574,6 +1575,13 @@ export default function Sidebar() {
           title: t('sales'),
           icon: DollarSign,
           href: '/vendor/sales',
+          roles: ['vendor']
+        }
+        ,
+        {
+          title: t('print'),
+          icon: Printer,
+          href: '/vendor/print',
           roles: ['vendor']
         }
       ]

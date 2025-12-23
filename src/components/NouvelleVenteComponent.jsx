@@ -913,6 +913,7 @@
 //     </div>
 //   )
 // }
+
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -1419,7 +1420,7 @@ export default function NouvelleVenteComponent({ onSaleCompleted }) {
     // Réinitialiser après téléchargement
     setTimeout(() => {
       resetForm()
-      router.push('/ventes')
+      router.push('/vendor/sales')
     }, 1000)
   }
 
@@ -1448,7 +1449,7 @@ export default function NouvelleVenteComponent({ onSaleCompleted }) {
               <button
                 onClick={() => {
                   resetForm()
-                  router.push('/ventes')
+                  router.push('/vendor/sales')
                 }}
                 className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50"
               >

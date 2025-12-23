@@ -1386,6 +1386,7 @@
 //     </div>
 //   )
 // }
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -1411,9 +1412,14 @@ import {
   RefreshCw,
   ShoppingCart,
   BarChart3,
-  Users
+  Users,
+  ShoppingCartIcon,
+  CalendarDays,
+  ArrowDownLeftIcon,
+  ArrowDownRight
 } from 'lucide-react'
 import Link from 'next/link'
+import UserOutflowDashboard from '../mouvement/page'
 
 export default function VentesDashboard() {
   const router = useRouter()
@@ -1676,9 +1682,7 @@ export default function VentesDashboard() {
         {/* Header avec Tabs */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <Link href='/vendor/mouvement'>
-            <span className='bg-red-500 text-white p-2.5 rounded-2xl mb-3'>Creer une sortie</span>
-            </Link>
+          
             <p className="text-gray-600">Bienvenue, {currentUser.full_name}!</p>
           </div>
           
@@ -1694,42 +1698,56 @@ export default function VentesDashboard() {
             </button>
             
             {/* Tabs */}
-            <div className="flex border border-gray-200 rounded-lg overflow-hidden bg-white">
+            <div className="flex border p-1 border-gray-200 rounded-lg overflow-hidden bg-white">
               <button
                 onClick={() => setActiveTab('newSale')}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   activeTab === 'newSale'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-blue-600/10  text-blue-500'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
+                <span className='hidden md:inline mr-1'>
                 Nouvelle vente
+                </span>
+                 <ShoppingCartIcon className='w-4 inline-flex'/>
               </button>
               <button
                 onClick={() => setActiveTab('todaySales')}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'todaySales'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-indigo-600/10  text-indigo-500'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Ventes du jour
+                 <span className='hidden md:inline mr-1'>
+
+                Ventes du jour 
+                 </span>
+                
+                <CalendarDays  className='w-4 inline-flex'/>
               </button>
               <button
                 onClick={() => setActiveTab('categories')}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                   activeTab === 'categories'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-red-600/10 text-red-500'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Catégories
+                    <span className='hidden md:inline mr-1'>
+
+                Sorties 
+                    </span>
+                <ArrowDownRight className='w-4 inline-flex'/>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Statistiques des ventes du jour */}
+       {activeTab !== 'categories' && (
+
+
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -1746,7 +1764,7 @@ export default function VentesDashboard() {
             </span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {/* Total des ventes */}
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="flex items-center justify-between">
@@ -1839,6 +1857,7 @@ export default function VentesDashboard() {
             </div>
           </div>
         </div>
+       )}
 
         {/* Contenu des Tabs */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -1984,11 +2003,53 @@ export default function VentesDashboard() {
                                   </div>
                                 </td>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 {/* Actions */}
                                 <td className="px-4 py-3 whitespace-nowrap">
                                   <div className="flex items-center space-x-1">
                                     <button
-                                      onClick={() => router.push(`/ventes/${vente.id}`)}
+                                      onClick={() => router.push(`/vendor/sales`)}
                                       className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition"
                                       title="Voir détails"
                                     >
@@ -2111,7 +2172,7 @@ export default function VentesDashboard() {
 
             {/* Tab 3: Gestion des Catégories */}
             {activeTab === 'categories' && (
-              <CategoryManager />
+              <UserOutflowDashboard/>
             )}
           </div>
         </div>

@@ -1,10 +1,10 @@
 
-
 // 'use client'
 
 // import { useState, useEffect } from 'react'
 // import { useRouter } from 'next/navigation'
 // import { supabase } from '@/lib/supabase'
+// import { useLanguage } from '@/contexts/LanguageContext' // Ajout de l'import
 // import { 
 //   ShoppingBag, 
 //   Search, 
@@ -25,6 +25,8 @@
 
 // export default function VentesPage() {
 //   const router = useRouter()
+//   const { t } = useLanguage() // Utilisation du hook de traduction
+  
 //   const [ventes, setVentes] = useState([])
 //   const [loading, setLoading] = useState(true)
 //   const [saleConfig, setSaleConfig] = useState({
@@ -69,7 +71,7 @@
 //         setSaleConfig(data)
 //       }
 //     } catch (error) {
-//       console.error('Erreur chargement config:', error)
+//       console.error(t('configLoadError'), error)
 //     }
 //   }
 
@@ -120,14 +122,14 @@
 //       const { data, error } = await query
 
 //       if (error) {
-//         console.error('Erreur Supabase:', error)
+//         console.error(t('supabaseError'), error)
 //         setVentes([])
 //       } else if (data) {
 //         setVentes(data)
 //       }
       
 //     } catch (error) {
-//       console.error('Erreur lors du chargement:', error)
+//       console.error(t('loadError'), error)
 //     } finally {
 //       setLoading(false)
 //     }
@@ -135,12 +137,10 @@
 
 //   const loadStats = async () => {
 //     try {
-//       // Requête pour toutes les ventes (sans filtre de statut)
 //       let query = supabase
 //         .from('sale')
 //         .select('*')
 
-//       // Appliquer le filtre date pour les stats
 //       if (filters.dateRange === 'today') {
 //         const today = new Date()
 //         today.setHours(0, 0, 0, 0)
@@ -160,19 +160,16 @@
 //         query = query.gte('created_at', firstDay.toISOString())
 //       }
 
-//       // Appliquer filtre devise si spécifié
 //       if (filters.currency !== 'all') {
 //         query = query.eq('currency', filters.currency)
 //       }
 
-//       // Appliquer filtre recherche si spécifié
 //       if (filters.search) {
 //         query = query.ilike('sale_number', `%${filters.search}%`)
 //       }
 
 //       const { data: allSales } = await query
 
-//       // Initialiser les statistiques
 //       let totalVentes = 0
 //       let totalMontantCDF = 0
 //       let totalMontantUSD = 0
@@ -182,7 +179,6 @@
 //       let montantAujourdhuiCDF = 0
 //       let montantAujourdhuiUSD = 0
 
-//       // Calculer les statistiques
 //       if (allSales) {
 //         totalVentes = allSales.length
         
@@ -195,11 +191,9 @@
 //           const isToday = new Date(sale.created_at) >= today
           
 //           if (sale.currency === 'USD') {
-//             // Vente en USD - convertir en CDF avec le taux de la vente
 //             ventesUSD += 1
 //             totalMontantUSD += montant
             
-//             // Conversion vers CDF avec le taux de la vente
 //             const montantCDF = montant * tauxVente
 //             totalMontantCDF += montantCDF
             
@@ -209,7 +203,6 @@
 //               montantAujourdhuiCDF += montantCDF
 //             }
 //           } else {
-//             // Vente en CDF
 //             ventesCDF += 1
 //             totalMontantCDF += montant
             
@@ -221,7 +214,6 @@
 //         })
 //       }
 
-//       // Calculer les montants arrondis
 //       setStats({
 //         totalVentes,
 //         totalMontantCDF: Math.round(totalMontantCDF),
@@ -234,7 +226,7 @@
 //       })
 
 //     } catch (error) {
-//       console.error('Erreur chargement stats:', error)
+//       console.error(t('statsLoadError'), error)
 //     }
 //   }
 
@@ -253,11 +245,27 @@
 
 //   const getStatusConfig = (status) => {
 //     const configs = {
-//       completed: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Complété' },
-//       cancelled: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Annulé' },
-//       refunded: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle, label: 'Remboursé' }
+//       completed: { 
+//         color: 'bg-green-100 text-green-800', 
+//         icon: CheckCircle, 
+//         label: t('completed') 
+//       },
+//       cancelled: { 
+//         color: 'bg-red-100 text-red-800', 
+//         icon: XCircle, 
+//         label: t('cancelled') 
+//       },
+//       refunded: { 
+//         color: 'bg-yellow-100 text-yellow-800', 
+//         icon: AlertCircle, 
+//         label: t('refunded') 
+//       }
 //     }
-//     return configs[status] || { color: 'bg-gray-100 text-gray-800', icon: Clock, label: 'En attente' }
+//     return configs[status] || { 
+//       color: 'bg-gray-100 text-gray-800', 
+//       icon: Clock, 
+//       label: t('pending') 
+//     }
 //   }
 
 //   const getPaymentMethodIcon = (method) => {
@@ -267,6 +275,15 @@
 //       mobile: '📱'
 //     }
 //     return icons[method] || '💸'
+//   }
+
+//   const getPaymentMethodLabel = (method) => {
+//     const labels = {
+//       cash: t('cash'),
+//       card: t('card'),
+//       mobile: t('mobile')
+//     }
+//     return labels[method] || method
 //   }
 
 //   const getCurrencyBadge = (currency) => {
@@ -294,7 +311,7 @@
 //   ).length
 
 //   const handlePrintReceipt = (saleId) => {
-//     console.log('Impression reçu pour:', saleId)
+//     console.log(t('printReceiptFor'), saleId)
 //   }
 
 //   const handleRefresh = () => {
@@ -309,24 +326,26 @@
 //         <div>
 //           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
 //             <ShoppingBag className="w-6 h-6 sm:w-7 sm:h-7 mr-3 text-gray-700" />
-//             Ventes
+//             {t('sales')}
 //           </h1>
 //           <div className="flex flex-wrap gap-3 mt-2">
 //             <div className="flex items-center space-x-1 text-sm">
-//               <span className="text-gray-500">Total:</span>
+//               <span className="text-gray-500">{t('total')}:</span>
 //               <span className="font-medium">{stats.totalVentes}</span>
 //             </div>
 //             <div className="flex items-center space-x-1 text-sm">
-//               <span className="text-blue-600">Aujourd'hui:</span>
+//               <span className="text-blue-600">{t('today')}:</span>
 //               <span className="font-medium">{stats.ventesAujourdhui}</span>
 //             </div>
 //             <div className="flex items-center space-x-1 text-sm">
-//               <span className="text-green-600">CA:</span>
+//               <span className="text-green-600">{t('revenue')}:</span>
 //               <span className="font-medium">{formatCurrency(stats.montantAujourdhuiCDF)}</span>
 //             </div>
 //             <div className="flex items-center space-x-1 text-sm">
 //               <DollarSign className="w-4 h-4 text-gray-500" />
-//               <span className="text-gray-500">Taux actuel: 1$ = {saleConfig.currency_rate?.toLocaleString('fr-FR') || '2,300'} FC</span>
+//               <span className="text-gray-500">
+//                 {t('currentRate')}: 1$ = {saleConfig.currency_rate?.toLocaleString('fr-FR') || '2,300'} FC
+//               </span>
 //             </div>
 //           </div>
 //         </div>
@@ -336,15 +355,9 @@
 //             onClick={handleRefresh}
 //             className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
 //           >
-//             Actualiser
+//             {t('refresh')}
 //           </button>
-//           <button
-//             onClick={() => router.push('/super-admin/sales/new')}
-//             className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm"
-//           >
-//             <Plus className="w-4 h-4" />
-//             <span>Nouvelle vente</span>
-//           </button>
+      
 //         </div>
 //       </div>
 
@@ -358,7 +371,7 @@
 //               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
 //               <input
 //                 type="text"
-//                 placeholder="Rechercher par N° facture, client..."
+//                 placeholder={t('searchPlaceholder')}
 //                 value={filters.search}
 //                 onChange={(e) => setFilters({...filters, search: e.target.value})}
 //                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
@@ -381,7 +394,9 @@
 //               className="flex items-center justify-center space-x-2 w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
 //             >
 //               <Filter className="w-4 h-4" />
-//               <span>Filtres {activeFilters > 0 && `(${activeFilters})`}</span>
+//               <span>
+//                 {t('filters')} {activeFilters > 0 && `(${activeFilters})`}
+//               </span>
 //               <ChevronDown className={`w-4 h-4 transition-transform ${showMobileFilters ? 'rotate-180' : ''}`} />
 //             </button>
 //           </div>
@@ -394,10 +409,10 @@
 //               onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
 //               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
 //             >
-//               <option value="all">Toutes dates</option>
-//               <option value="today">Aujourd'hui</option>
-//               <option value="yesterday">Hier</option>
-//               <option value="thisMonth">Ce mois</option>
+//               <option value="all">{t('allDates')}</option>
+//               <option value="today">{t('today')}</option>
+//               <option value="yesterday">{t('yesterday')}</option>
+//               <option value="thisMonth">{t('thisMonth')}</option>
 //             </select>
 
 //             {/* Filtre statut */}
@@ -406,10 +421,10 @@
 //               onChange={(e) => setFilters({...filters, status: e.target.value})}
 //               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
 //             >
-//               <option value="all">Tous statuts</option>
-//               <option value="completed">Complétées</option>
-//               <option value="cancelled">Annulées</option>
-//               <option value="refunded">Remboursées</option>
+//               <option value="all">{t('allStatuses')}</option>
+//               <option value="completed">{t('completed')}</option>
+//               <option value="cancelled">{t('cancelled')}</option>
+//               <option value="refunded">{t('refunded')}</option>
 //             </select>
 
 //             {/* Filtre devise */}
@@ -418,9 +433,9 @@
 //               onChange={(e) => setFilters({...filters, currency: e.target.value})}
 //               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
 //             >
-//               <option value="all">Toutes devises</option>
-//               <option value="CDF">CDF seulement</option>
-//               <option value="USD">USD seulement</option>
+//               <option value="all">{t('allCurrencies')}</option>
+//               <option value="CDF">{t('cdfOnly')}</option>
+//               <option value="USD">{t('usdOnly')}</option>
 //             </select>
             
 //             {/* Bouton réinitialiser */}
@@ -429,7 +444,7 @@
 //                 onClick={handleResetFilters}
 //                 className="px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
 //               >
-//                 Réinitialiser
+//                 {t('reset')}
 //               </button>
 //             )}
 //           </div>
@@ -440,7 +455,7 @@
 //           {/* Total ventes */}
 //           <div className="text-center p-2">
 //             <div className="text-lg font-bold text-gray-900">{stats.totalVentes}</div>
-//             <div className="text-xs text-gray-500">Total ventes</div>
+//             <div className="text-xs text-gray-500">{t('totalSales')}</div>
 //             <div className="flex justify-center space-x-2 mt-1">
 //               <span className="text-xs text-green-600">{stats.ventesCDF} FC</span>
 //               <span className="text-xs text-blue-600">{stats.ventesUSD} $</span>
@@ -450,25 +465,25 @@
 //           {/* Total montant CDF */}
 //           <div className="text-center p-2">
 //             <div className="text-lg font-bold text-green-600">{formatCurrency(stats.totalMontantCDF)}</div>
-//             <div className="text-xs text-gray-500">Total en Francs</div>
+//             <div className="text-xs text-gray-500">{t('totalInFrancs')}</div>
 //             <div className="text-xs text-gray-400 mt-1">
-//               {stats.ventesCDF} vente{stats.ventesCDF !== 1 ? 's' : ''}
+//               {stats.ventesCDF} {t('sale')}{stats.ventesCDF !== 1 ? 's' : ''}
 //             </div>
 //           </div>
           
 //           {/* Total montant USD */}
 //           <div className="text-center p-2">
 //             <div className="text-lg font-bold text-blue-600">$ {stats.totalMontantUSD?.toFixed(2) || '0.00'}</div>
-//             <div className="text-xs text-gray-500">Total en Dollars</div>
+//             <div className="text-xs text-gray-500">{t('totalInDollars')}</div>
 //             <div className="text-xs text-gray-400 mt-1">
-//               {stats.ventesUSD} vente{stats.ventesUSD !== 1 ? 's' : ''}
+//               {stats.ventesUSD} {t('sale')}{stats.ventesUSD !== 1 ? 's' : ''}
 //             </div>
 //           </div>
           
 //           {/* CA aujourd'hui */}
 //           <div className="text-center p-2">
 //             <div className="text-lg font-bold text-purple-600">{formatCurrency(stats.montantAujourdhuiCDF)}</div>
-//             <div className="text-xs text-gray-500">CA aujourd'hui</div>
+//             <div className="text-xs text-gray-500">{t('todayRevenue')}</div>
 //             <div className="text-xs text-gray-400 mt-1">
 //               $ {stats.montantAujourdhuiUSD?.toFixed(2) || '0.00'}
 //             </div>
@@ -481,48 +496,48 @@
 //             <div className="space-y-4">
 //               <div>
 //                 <label className="block text-sm font-medium text-gray-700 mb-2">
-//                   Période
+//                   {t('period')}
 //                 </label>
 //                 <select
 //                   value={filters.dateRange}
 //                   onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
 //                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
 //                 >
-//                   <option value="all">Toutes dates</option>
-//                   <option value="today">Aujourd'hui</option>
-//                   <option value="yesterday">Hier</option>
-//                   <option value="thisMonth">Ce mois</option>
+//                   <option value="all">{t('allDates')}</option>
+//                   <option value="today">{t('today')}</option>
+//                   <option value="yesterday">{t('yesterday')}</option>
+//                   <option value="thisMonth">{t('thisMonth')}</option>
 //                 </select>
 //               </div>
 
 //               <div>
 //                 <label className="block text-sm font-medium text-gray-700 mb-2">
-//                   Statut
+//                   {t('status')}
 //                 </label>
 //                 <select
 //                   value={filters.status}
 //                   onChange={(e) => setFilters({...filters, status: e.target.value})}
 //                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
 //                 >
-//                   <option value="all">Tous statuts</option>
-//                   <option value="completed">Complétées</option>
-//                   <option value="cancelled">Annulées</option>
-//                   <option value="refunded">Remboursées</option>
+//                   <option value="all">{t('allStatuses')}</option>
+//                   <option value="completed">{t('completed')}</option>
+//                   <option value="cancelled">{t('cancelled')}</option>
+//                   <option value="refunded">{t('refunded')}</option>
 //                 </select>
 //               </div>
 
 //               <div>
 //                 <label className="block text-sm font-medium text-gray-700 mb-2">
-//                   Devise
+//                   {t('currency')}
 //                 </label>
 //                 <select
 //                   value={filters.currency}
 //                   onChange={(e) => setFilters({...filters, currency: e.target.value})}
 //                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
 //                 >
-//                   <option value="all">Toutes devises</option>
-//                   <option value="CDF">CDF seulement</option>
-//                   <option value="USD">USD seulement</option>
+//                   <option value="all">{t('allCurrencies')}</option>
+//                   <option value="CDF">{t('cdfOnly')}</option>
+//                   <option value="USD">{t('usdOnly')}</option>
 //                 </select>
 //               </div>
               
@@ -532,13 +547,13 @@
 //                     onClick={handleResetFilters}
 //                     className="flex-1 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
 //                   >
-//                     Réinitialiser
+//                     {t('reset')}
 //                   </button>
 //                   <button
 //                     onClick={() => setShowMobileFilters(false)}
 //                     className="flex-1 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm"
 //                   >
-//                     Appliquer
+//                     {t('apply')}
 //                   </button>
 //                 </div>
 //               </div>
@@ -552,7 +567,7 @@
 //         <div className="bg-white rounded-lg border border-gray-200 p-8">
 //           <div className="flex flex-col items-center justify-center space-y-4">
 //             <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
-//             <div className="text-gray-500">Chargement des ventes...</div>
+//             <div className="text-gray-500">{t('loadingSales')}</div>
 //           </div>
 //         </div>
 //       ) : ventes.length > 0 ? (
@@ -563,31 +578,31 @@
 //               <thead className="bg-gray-50">
 //                 <tr>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Facture
+//                     {t('invoice')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Client
+//                     {t('client')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Date
+//                     {t('date')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Montant
+//                     {t('amount')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Taux
+//                     {t('rate')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Devise
+//                     {t('currency')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Paiement
+//                     {t('payment')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Statut
+//                     {t('status')}
 //                   </th>
 //                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                     Actions
+//                     {t('actions')}
 //                   </th>
 //                 </tr>
 //               </thead>
@@ -596,16 +611,13 @@
 //                   const statusConfig = getStatusConfig(vente.status)
 //                   const Icon = statusConfig.icon
                   
-//                   // Calculer le montant converti avec le taux de la vente
 //                   let montantConverti = null
 //                   let deviseConvertie = ''
                   
 //                   if (vente.currency === 'USD' && vente.currency_rate) {
-//                     // Vente en USD, convertir en CDF avec le taux de la vente
 //                     montantConverti = vente.total * vente.currency_rate
 //                     deviseConvertie = 'CDF'
 //                   } else if (vente.currency === 'CDF' && vente.currency_rate) {
-//                     // Vente en CDF, convertir en USD avec le taux de la vente
 //                     montantConverti = vente.total / vente.currency_rate
 //                     deviseConvertie = 'USD'
 //                   }
@@ -627,10 +639,10 @@
 //                           </div>
 //                           <div>
 //                             <div className="font-medium text-sm text-gray-900">
-//                               {vente.client?.name || 'Client non spécifié'}
+//                               {vente.client?.name || t('unspecifiedClient')}
 //                             </div>
 //                             <div className="text-xs text-gray-500">
-//                               {vente.client?.phone || 'Pas de téléphone'}
+//                               {vente.client?.phone || t('noPhone')}
 //                             </div>
 //                           </div>
 //                         </div>
@@ -669,7 +681,9 @@
 //                       <td className="px-4 py-3 whitespace-nowrap">
 //                         {vente.currency_rate && vente.currency === 'USD' && (
 //                           <div className="text-sm">
-//                             <div className="text-gray-700">1$ = {vente.currency_rate.toLocaleString('fr-FR')} FC</div>
+//                             <div className="text-gray-700">
+//                               1$ = {vente.currency_rate.toLocaleString('fr-FR')} FC
+//                             </div>
 //                           </div>
 //                         )}
 //                       </td>
@@ -683,7 +697,9 @@
 //                       <td className="px-4 py-3 whitespace-nowrap">
 //                         <div className="flex items-center space-x-2">
 //                           <span className="text-lg">{getPaymentMethodIcon(vente.payment_method)}</span>
-//                           <span className="text-sm capitalize">{vente.payment_method}</span>
+//                           <span className="text-sm capitalize">
+//                             {getPaymentMethodLabel(vente.payment_method)}
+//                           </span>
 //                         </div>
 //                       </td>
 
@@ -701,14 +717,14 @@
 //                           <button
 //                             onClick={() => router.push(`/super-admin/sale/${vente.sale_number}`)}
 //                             className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition"
-//                             title="Voir détails"
+//                             title={t('viewDetails')}
 //                           >
 //                             <Eye className="w-4 h-4" />
 //                           </button>
 //                           <button
 //                             onClick={() => handlePrintReceipt(vente.id)}
 //                             className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition"
-//                             title="Imprimer"
+//                             title={t('print')}
 //                           >
 //                             <Printer className="w-4 h-4" />
 //                           </button>
@@ -727,7 +743,6 @@
 //               const statusConfig = getStatusConfig(vente.status)
 //               const Icon = statusConfig.icon
               
-//               // Calculer le montant converti avec le taux de la vente
 //               let montantConverti = null
 //               let deviseConvertie = ''
               
@@ -754,7 +769,7 @@
 //                       </div>
 //                       <div className="flex items-center space-x-2 text-sm text-gray-600">
 //                         <User className="h-3 w-3" />
-//                         <span>{vente.client?.name || 'Client non spécifié'}</span>
+//                         <span>{vente.client?.name || t('unspecifiedClient')}</span>
 //                         <div className="ml-auto">
 //                           {getCurrencyBadge(vente.currency)}
 //                         </div>
@@ -764,13 +779,13 @@
                   
 //                   <div className="grid grid-cols-2 gap-4 mt-3">
 //                     <div>
-//                       <div className="text-xs text-gray-500">Date</div>
+//                       <div className="text-xs text-gray-500">{t('date')}</div>
 //                       <div className="text-sm font-medium">
 //                         {new Date(vente.created_at).toLocaleDateString('fr-FR')}
 //                       </div>
 //                     </div>
 //                     <div>
-//                       <div className="text-xs text-gray-500">Montant</div>
+//                       <div className="text-xs text-gray-500">{t('amount')}</div>
 //                       <div className="text-sm font-semibold text-gray-900">
 //                         {formatCurrency(vente.total, vente.currency)}
 //                       </div>
@@ -785,7 +800,7 @@
 //                   {/* Taux pour les ventes en USD */}
 //                   {vente.currency_rate && vente.currency === 'USD' && (
 //                     <div className="mt-2 pt-2 border-t border-gray-200">
-//                       <div className="text-xs text-gray-500">Taux appliqué:</div>
+//                       <div className="text-xs text-gray-500">{t('appliedRate')}:</div>
 //                       <div className="text-sm font-medium">
 //                         1$ = {vente.currency_rate.toLocaleString('fr-FR')} FC
 //                       </div>
@@ -795,18 +810,22 @@
 //                   <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
 //                     <div className="flex items-center space-x-2">
 //                       <span className="text-lg">{getPaymentMethodIcon(vente.payment_method)}</span>
-//                       <span className="text-sm capitalize">{vente.payment_method}</span>
+//                       <span className="text-sm capitalize">
+//                         {getPaymentMethodLabel(vente.payment_method)}
+//                       </span>
 //                     </div>
 //                     <div className="flex items-center space-x-1">
 //                       <button
 //                         onClick={() => router.push(`/ventes/${vente.id}`)}
 //                         className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+//                         title={t('viewDetails')}
 //                       >
 //                         <Eye className="w-4 h-4" />
 //                       </button>
 //                       <button
 //                         onClick={() => handlePrintReceipt(vente.id)}
 //                         className="p-1.5 text-green-600 hover:bg-green-50 rounded"
+//                         title={t('print')}
 //                       >
 //                         <Printer className="w-4 h-4" />
 //                       </button>
@@ -822,12 +841,12 @@
 //           <div className="text-center">
 //             <ShoppingBag className="w-12 h-12 text-gray-400 mx-auto mb-3" />
 //             <h3 className="text-lg font-medium text-gray-900 mb-1">
-//               Aucune vente trouvée
+//               {t('noSalesFound')}
 //             </h3>
 //             <p className="text-gray-500 text-sm mb-4">
 //               {activeFilters > 0
-//                 ? "Aucune vente ne correspond à vos filtres"
-//                 : "Commencez par effectuer votre première vente"
+//                 ? t('noSalesMatchFilters')
+//                 : t('startWithFirstSale')
 //               }
 //             </p>
 //             <button
@@ -835,7 +854,7 @@
 //               className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm"
 //             >
 //               <Plus className="w-4 h-4 mr-2" />
-//               Nouvelle vente
+//               {t('newSale')}
 //             </button>
 //           </div>
 //         </div>
@@ -848,7 +867,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { useLanguage } from '@/contexts/LanguageContext' // Ajout de l'import
+import { useLanguage } from '@/contexts/LanguageContext'
 import { 
   ShoppingBag, 
   Search, 
@@ -864,12 +883,13 @@ import {
   Loader2,
   X,
   ChevronDown,
-  DollarSign
+  DollarSign,
+  Store
 } from 'lucide-react'
 
 export default function VentesPage() {
   const router = useRouter()
-  const { t } = useLanguage() // Utilisation du hook de traduction
+  const { t } = useLanguage()
   
   const [ventes, setVentes] = useState([])
   const [loading, setLoading] = useState(true)
@@ -882,9 +902,13 @@ export default function VentesPage() {
     search: '',
     status: 'all',
     dateRange: 'all',
-    currency: 'all'
+    currency: 'all',
+    userId: 'all'
   })
   const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const [users, setUsers] = useState([])
+  const [loadingUsers, setLoadingUsers] = useState(false)
+  const [vendorsMap, setVendorsMap] = useState({})
   const [stats, setStats] = useState({
     totalVentes: 0,
     totalMontantCDF: 0,
@@ -898,9 +922,49 @@ export default function VentesPage() {
 
   useEffect(() => {
     loadSaleConfig()
-    loadVentes()
-    loadStats()
-  }, [filters])
+    loadUsers()
+  }, [])
+
+  useEffect(() => {
+    if (users.length > 0) {
+      loadVentes()
+      loadStats()
+    }
+  }, [filters, users])
+
+  const loadUsers = async () => {
+    setLoadingUsers(true)
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, shop_name, profile_image, phone, email, role')
+        .eq('role', 'vendor')
+        .eq('is_active', true)
+        .order('full_name', { ascending: true })
+      
+      if (data) {
+        setUsers(data)
+        // Créer un map pour accéder rapidement aux vendeurs par ID
+        const map = {}
+        data.forEach(user => {
+          map[user.id] = user
+        })
+        setVendorsMap(map)
+      }
+    } catch (error) {
+      console.error('Erreur chargement vendeurs:', error)
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
+  const getProfileImageUrl = (profileImagePath) => {
+    if (!profileImagePath) return null;
+    const { data } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(profileImagePath);
+    return data.publicUrl;
+  }
 
   const loadSaleConfig = async () => {
     try {
@@ -915,7 +979,7 @@ export default function VentesPage() {
         setSaleConfig(data)
       }
     } catch (error) {
-      console.error(t('configLoadError'), error)
+      console.error('Erreur chargement config:', error)
     }
   }
 
@@ -925,10 +989,7 @@ export default function VentesPage() {
     try {
       let query = supabase
         .from('sale')
-        .select(`
-          *,
-          client:client(name, phone)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
 
       // Appliquer les filtres
@@ -959,21 +1020,26 @@ export default function VentesPage() {
         query = query.eq('currency', filters.currency)
       }
 
+      if (filters.userId !== 'all') {
+        query = query.eq('user_id', filters.userId)
+      }
+
       if (filters.search) {
-        query = query.or(`sale_number.ilike.%${filters.search}%,client.name.ilike.%${filters.search}%`)
+        // Recherche dans le numéro de vente uniquement
+        query = query.ilike('sale_number', `%${filters.search}%`)
       }
 
       const { data, error } = await query
 
       if (error) {
-        console.error(t('supabaseError'), error)
+        console.error('Erreur Supabase:', error)
         setVentes([])
       } else if (data) {
         setVentes(data)
       }
       
     } catch (error) {
-      console.error(t('loadError'), error)
+      console.error('Erreur chargement ventes:', error)
     } finally {
       setLoading(false)
     }
@@ -1008,8 +1074,8 @@ export default function VentesPage() {
         query = query.eq('currency', filters.currency)
       }
 
-      if (filters.search) {
-        query = query.ilike('sale_number', `%${filters.search}%`)
+      if (filters.userId !== 'all') {
+        query = query.eq('user_id', filters.userId)
       }
 
       const { data: allSales } = await query
@@ -1070,7 +1136,7 @@ export default function VentesPage() {
       })
 
     } catch (error) {
-      console.error(t('statsLoadError'), error)
+      console.error('Erreur chargement stats:', error)
     }
   }
 
@@ -1092,23 +1158,23 @@ export default function VentesPage() {
       completed: { 
         color: 'bg-green-100 text-green-800', 
         icon: CheckCircle, 
-        label: t('completed') 
+        label: 'Terminée' 
       },
       cancelled: { 
         color: 'bg-red-100 text-red-800', 
         icon: XCircle, 
-        label: t('cancelled') 
+        label: 'Annulée' 
       },
       refunded: { 
         color: 'bg-yellow-100 text-yellow-800', 
         icon: AlertCircle, 
-        label: t('refunded') 
+        label: 'Remboursée' 
       }
     }
     return configs[status] || { 
       color: 'bg-gray-100 text-gray-800', 
       icon: Clock, 
-      label: t('pending') 
+      label: 'En attente' 
     }
   }
 
@@ -1123,9 +1189,9 @@ export default function VentesPage() {
 
   const getPaymentMethodLabel = (method) => {
     const labels = {
-      cash: t('cash'),
-      card: t('card'),
-      mobile: t('mobile')
+      cash: 'Espèces',
+      card: 'Carte',
+      mobile: 'Mobile'
     }
     return labels[method] || method
   }
@@ -1146,7 +1212,8 @@ export default function VentesPage() {
       search: '',
       status: 'all',
       dateRange: 'all',
-      currency: 'all'
+      currency: 'all',
+      userId: 'all'
     })
   }
 
@@ -1155,13 +1222,28 @@ export default function VentesPage() {
   ).length
 
   const handlePrintReceipt = (saleId) => {
-    console.log(t('printReceiptFor'), saleId)
+    console.log('Imprimer reçu pour:', saleId)
   }
 
   const handleRefresh = () => {
     loadVentes()
     loadStats()
   }
+
+  // Fonction pour récupérer les infos du vendeur
+  const getVendorInfo = (sale) => {
+    if (!sale.user_id) return null;
+    
+    const vendor = vendorsMap[sale.user_id];
+    if (!vendor) return null;
+    
+    return {
+      name: vendor.full_name || vendor.email || 'Vendeur inconnu',
+      shopName: vendor.shop_name || 'Pas de magasin',
+      profileImage: vendor.profile_image ? getProfileImageUrl(vendor.profile_image) : null,
+      phone: vendor.phone || null
+    };
+  };
 
   return (
     <div className="p-4 sm:p-6">
@@ -1170,25 +1252,25 @@ export default function VentesPage() {
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
             <ShoppingBag className="w-6 h-6 sm:w-7 sm:h-7 mr-3 text-gray-700" />
-            {t('sales')}
+            Ventes
           </h1>
           <div className="flex flex-wrap gap-3 mt-2">
             <div className="flex items-center space-x-1 text-sm">
-              <span className="text-gray-500">{t('total')}:</span>
+              <span className="text-gray-500">Total:</span>
               <span className="font-medium">{stats.totalVentes}</span>
             </div>
             <div className="flex items-center space-x-1 text-sm">
-              <span className="text-blue-600">{t('today')}:</span>
+              <span className="text-blue-600">Aujourd'hui:</span>
               <span className="font-medium">{stats.ventesAujourdhui}</span>
             </div>
             <div className="flex items-center space-x-1 text-sm">
-              <span className="text-green-600">{t('revenue')}:</span>
+              <span className="text-green-600">Recette:</span>
               <span className="font-medium">{formatCurrency(stats.montantAujourdhuiCDF)}</span>
             </div>
             <div className="flex items-center space-x-1 text-sm">
               <DollarSign className="w-4 h-4 text-gray-500" />
               <span className="text-gray-500">
-                {t('currentRate')}: 1$ = {saleConfig.currency_rate?.toLocaleString('fr-FR') || '2,300'} FC
+                Taux: 1$ = {saleConfig.currency_rate?.toLocaleString('fr-FR') || '2,300'} FC
               </span>
             </div>
           </div>
@@ -1199,14 +1281,14 @@ export default function VentesPage() {
             onClick={handleRefresh}
             className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
           >
-            {t('refresh')}
+            Actualiser
           </button>
           <button
             onClick={() => router.push('/super-admin/sales/new')}
-            className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm"
+            className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm flex items-center"
           >
-            <Plus className="w-4 h-4" />
-            <span>{t('newSale')}</span>
+            <Plus className="w-4 h-4 mr-2" />
+            Nouvelle vente
           </button>
         </div>
       </div>
@@ -1221,7 +1303,7 @@ export default function VentesPage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
-                placeholder={t('searchPlaceholder')}
+                placeholder="Rechercher par numéro de vente..."
                 value={filters.search}
                 onChange={(e) => setFilters({...filters, search: e.target.value})}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition text-sm"
@@ -1245,7 +1327,7 @@ export default function VentesPage() {
             >
               <Filter className="w-4 h-4" />
               <span>
-                {t('filters')} {activeFilters > 0 && `(${activeFilters})`}
+                Filtres {activeFilters > 0 && `(${activeFilters})`}
               </span>
               <ChevronDown className={`w-4 h-4 transition-transform ${showMobileFilters ? 'rotate-180' : ''}`} />
             </button>
@@ -1253,16 +1335,30 @@ export default function VentesPage() {
 
           {/* Filtres desktop */}
           <div className="hidden lg:flex flex-wrap gap-2">
+            {/* Filtre vendeur */}
+            <select
+              value={filters.userId}
+              onChange={(e) => setFilters({...filters, userId: e.target.value})}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm min-w-[150px]"
+            >
+              <option value="all">Tous les vendeurs</option>
+              {users.map(user => (
+                <option key={user.id} value={user.id}>
+                  {user.full_name || user.email}
+                </option>
+              ))}
+            </select>
+
             {/* Filtre date */}
             <select
               value={filters.dateRange}
               onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
             >
-              <option value="all">{t('allDates')}</option>
-              <option value="today">{t('today')}</option>
-              <option value="yesterday">{t('yesterday')}</option>
-              <option value="thisMonth">{t('thisMonth')}</option>
+              <option value="all">Toutes dates</option>
+              <option value="today">Aujourd'hui</option>
+              <option value="yesterday">Hier</option>
+              <option value="thisMonth">Ce mois</option>
             </select>
 
             {/* Filtre statut */}
@@ -1271,10 +1367,10 @@ export default function VentesPage() {
               onChange={(e) => setFilters({...filters, status: e.target.value})}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
             >
-              <option value="all">{t('allStatuses')}</option>
-              <option value="completed">{t('completed')}</option>
-              <option value="cancelled">{t('cancelled')}</option>
-              <option value="refunded">{t('refunded')}</option>
+              <option value="all">Tous statuts</option>
+              <option value="completed">Terminée</option>
+              <option value="cancelled">Annulée</option>
+              <option value="refunded">Remboursée</option>
             </select>
 
             {/* Filtre devise */}
@@ -1283,9 +1379,9 @@ export default function VentesPage() {
               onChange={(e) => setFilters({...filters, currency: e.target.value})}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
             >
-              <option value="all">{t('allCurrencies')}</option>
-              <option value="CDF">{t('cdfOnly')}</option>
-              <option value="USD">{t('usdOnly')}</option>
+              <option value="all">Toutes devises</option>
+              <option value="CDF">FC seulement</option>
+              <option value="USD">USD seulement</option>
             </select>
             
             {/* Bouton réinitialiser */}
@@ -1294,46 +1390,42 @@ export default function VentesPage() {
                 onClick={handleResetFilters}
                 className="px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
               >
-                {t('reset')}
+                Réinitialiser
               </button>
             )}
           </div>
         </div>
 
-        {/* Stats avec séparation CDF/USD */}
+        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-gray-200">
-          {/* Total ventes */}
           <div className="text-center p-2">
             <div className="text-lg font-bold text-gray-900">{stats.totalVentes}</div>
-            <div className="text-xs text-gray-500">{t('totalSales')}</div>
+            <div className="text-xs text-gray-500">Total ventes</div>
             <div className="flex justify-center space-x-2 mt-1">
               <span className="text-xs text-green-600">{stats.ventesCDF} FC</span>
               <span className="text-xs text-blue-600">{stats.ventesUSD} $</span>
             </div>
           </div>
           
-          {/* Total montant CDF */}
           <div className="text-center p-2">
             <div className="text-lg font-bold text-green-600">{formatCurrency(stats.totalMontantCDF)}</div>
-            <div className="text-xs text-gray-500">{t('totalInFrancs')}</div>
+            <div className="text-xs text-gray-500">Total en francs</div>
             <div className="text-xs text-gray-400 mt-1">
-              {stats.ventesCDF} {t('sale')}{stats.ventesCDF !== 1 ? 's' : ''}
+              {stats.ventesCDF} vente{stats.ventesCDF !== 1 ? 's' : ''}
             </div>
           </div>
           
-          {/* Total montant USD */}
           <div className="text-center p-2">
             <div className="text-lg font-bold text-blue-600">$ {stats.totalMontantUSD?.toFixed(2) || '0.00'}</div>
-            <div className="text-xs text-gray-500">{t('totalInDollars')}</div>
+            <div className="text-xs text-gray-500">Total en dollars</div>
             <div className="text-xs text-gray-400 mt-1">
-              {stats.ventesUSD} {t('sale')}{stats.ventesUSD !== 1 ? 's' : ''}
+              {stats.ventesUSD} vente{stats.ventesUSD !== 1 ? 's' : ''}
             </div>
           </div>
           
-          {/* CA aujourd'hui */}
           <div className="text-center p-2">
             <div className="text-lg font-bold text-purple-600">{formatCurrency(stats.montantAujourdhuiCDF)}</div>
-            <div className="text-xs text-gray-500">{t('todayRevenue')}</div>
+            <div className="text-xs text-gray-500">Recette aujourd'hui</div>
             <div className="text-xs text-gray-400 mt-1">
               $ {stats.montantAujourdhuiUSD?.toFixed(2) || '0.00'}
             </div>
@@ -1344,50 +1436,69 @@ export default function VentesPage() {
         {showMobileFilters && (
           <div className="lg:hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
             <div className="space-y-4">
+              {/* Filtre vendeur mobile */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('period')}
+                  Vendeur
+                </label>
+                <select
+                  value={filters.userId}
+                  onChange={(e) => setFilters({...filters, userId: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
+                >
+                  <option value="all">Tous les vendeurs</option>
+                  {users.map(user => (
+                    <option key={user.id} value={user.id}>
+                      {user.full_name || user.email}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Période
                 </label>
                 <select
                   value={filters.dateRange}
                   onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
                 >
-                  <option value="all">{t('allDates')}</option>
-                  <option value="today">{t('today')}</option>
-                  <option value="yesterday">{t('yesterday')}</option>
-                  <option value="thisMonth">{t('thisMonth')}</option>
+                  <option value="all">Toutes dates</option>
+                  <option value="today">Aujourd'hui</option>
+                  <option value="yesterday">Hier</option>
+                  <option value="thisMonth">Ce mois</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('status')}
+                  Statut
                 </label>
                 <select
                   value={filters.status}
                   onChange={(e) => setFilters({...filters, status: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
                 >
-                  <option value="all">{t('allStatuses')}</option>
-                  <option value="completed">{t('completed')}</option>
-                  <option value="cancelled">{t('cancelled')}</option>
-                  <option value="refunded">{t('refunded')}</option>
+                  <option value="all">Tous statuts</option>
+                  <option value="completed">Terminée</option>
+                  <option value="cancelled">Annulée</option>
+                  <option value="refunded">Remboursée</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('currency')}
+                  Devise
                 </label>
                 <select
                   value={filters.currency}
                   onChange={(e) => setFilters({...filters, currency: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white text-sm"
                 >
-                  <option value="all">{t('allCurrencies')}</option>
-                  <option value="CDF">{t('cdfOnly')}</option>
-                  <option value="USD">{t('usdOnly')}</option>
+                  <option value="all">Toutes devises</option>
+                  <option value="CDF">FC seulement</option>
+                  <option value="USD">USD seulement</option>
                 </select>
               </div>
               
@@ -1397,13 +1508,13 @@ export default function VentesPage() {
                     onClick={handleResetFilters}
                     className="flex-1 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm"
                   >
-                    {t('reset')}
+                    Réinitialiser
                   </button>
                   <button
                     onClick={() => setShowMobileFilters(false)}
                     className="flex-1 px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm"
                   >
-                    {t('apply')}
+                    Appliquer
                   </button>
                 </div>
               </div>
@@ -1417,7 +1528,7 @@ export default function VentesPage() {
         <div className="bg-white rounded-lg border border-gray-200 p-8">
           <div className="flex flex-col items-center justify-center space-y-4">
             <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
-            <div className="text-gray-500">{t('loadingSales')}</div>
+            <div className="text-gray-500">Chargement des ventes...</div>
           </div>
         </div>
       ) : ventes.length > 0 ? (
@@ -1428,31 +1539,31 @@ export default function VentesPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('invoice')}
+                    Facture
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('client')}
+                    Vendeur
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('date')}
+                    Date
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('amount')}
+                    Montant
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('rate')}
+                    Taux
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('currency')}
+                    Devise
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('payment')}
+                    Paiement
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('status')}
+                    Statut
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('actions')}
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -1460,6 +1571,7 @@ export default function VentesPage() {
                 {ventes.map((vente) => {
                   const statusConfig = getStatusConfig(vente.status)
                   const Icon = statusConfig.icon
+                  const vendorInfo = getVendorInfo(vente)
                   
                   let montantConverti = null
                   let deviseConvertie = ''
@@ -1481,18 +1593,30 @@ export default function VentesPage() {
                         </div>
                       </td>
 
-                      {/* Client */}
+                      {/* Vendeur */}
                       <td className="px-4 py-3">
                         <div className="flex items-center space-x-2">
-                          <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                            <User className="h-4 w-4 text-gray-600" />
+                          <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                            {vendorInfo?.profileImage ? (
+                              <img
+                                src={vendorInfo.profileImage}
+                                alt={vendorInfo.name}
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.parentElement.innerHTML = '<Store className="h-4 w-4 text-gray-600" />';
+                                }}
+                              />
+                            ) : (
+                              <Store className="h-4 w-4 text-gray-600" />
+                            )}
                           </div>
                           <div>
                             <div className="font-medium text-sm text-gray-900">
-                              {vente.client?.name || t('unspecifiedClient')}
+                              {vendorInfo?.name || 'Vendeur inconnu'}
                             </div>
                             <div className="text-xs text-gray-500">
-                              {vente.client?.phone || t('noPhone')}
+                              {vendorInfo?.shopName || 'Pas de magasin'}
                             </div>
                           </div>
                         </div>
@@ -1567,14 +1691,14 @@ export default function VentesPage() {
                           <button
                             onClick={() => router.push(`/super-admin/sale/${vente.sale_number}`)}
                             className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition"
-                            title={t('viewDetails')}
+                            title="Voir détails"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handlePrintReceipt(vente.id)}
                             className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition"
-                            title={t('print')}
+                            title="Imprimer"
                           >
                             <Printer className="w-4 h-4" />
                           </button>
@@ -1592,6 +1716,7 @@ export default function VentesPage() {
             {ventes.map((vente) => {
               const statusConfig = getStatusConfig(vente.status)
               const Icon = statusConfig.icon
+              const vendorInfo = getVendorInfo(vente)
               
               let montantConverti = null
               let deviseConvertie = ''
@@ -1618,8 +1743,25 @@ export default function VentesPage() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <User className="h-3 w-3" />
-                        <span>{vente.client?.name || t('unspecifiedClient')}</span>
+                        {/* Vendeur en mobile */}
+                        <div className="flex items-center space-x-1">
+                          {vendorInfo?.profileImage ? (
+                            <img
+                              src={vendorInfo.profileImage}
+                              alt={vendorInfo.name}
+                              className="w-4 h-4 rounded-full object-cover"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentElement.innerHTML = '<Store className="h-3 w-3 text-gray-600" />';
+                              }}
+                            />
+                          ) : (
+                            <Store className="h-3 w-3 text-gray-600" />
+                          )}
+                          <span className="truncate max-w-[100px]">
+                            {vendorInfo?.name || 'Vendeur inconnu'}
+                          </span>
+                        </div>
                         <div className="ml-auto">
                           {getCurrencyBadge(vente.currency)}
                         </div>
@@ -1629,13 +1771,13 @@ export default function VentesPage() {
                   
                   <div className="grid grid-cols-2 gap-4 mt-3">
                     <div>
-                      <div className="text-xs text-gray-500">{t('date')}</div>
+                      <div className="text-xs text-gray-500">Date</div>
                       <div className="text-sm font-medium">
                         {new Date(vente.created_at).toLocaleDateString('fr-FR')}
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500">{t('amount')}</div>
+                      <div className="text-xs text-gray-500">Montant</div>
                       <div className="text-sm font-semibold text-gray-900">
                         {formatCurrency(vente.total, vente.currency)}
                       </div>
@@ -1647,10 +1789,20 @@ export default function VentesPage() {
                     </div>
                   </div>
                   
+                  {/* Shop name */}
+                  {vendorInfo?.shopName && (
+                    <div className="mt-2 pt-2 border-t border-gray-200">
+                      <div className="text-xs text-gray-500">Magasin:</div>
+                      <div className="text-sm font-medium truncate">
+                        {vendorInfo.shopName}
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* Taux pour les ventes en USD */}
                   {vente.currency_rate && vente.currency === 'USD' && (
                     <div className="mt-2 pt-2 border-t border-gray-200">
-                      <div className="text-xs text-gray-500">{t('appliedRate')}:</div>
+                      <div className="text-xs text-gray-500">Taux appliqué:</div>
                       <div className="text-sm font-medium">
                         1$ = {vente.currency_rate.toLocaleString('fr-FR')} FC
                       </div>
@@ -1666,16 +1818,16 @@ export default function VentesPage() {
                     </div>
                     <div className="flex items-center space-x-1">
                       <button
-                        onClick={() => router.push(`/ventes/${vente.id}`)}
+                        onClick={() => router.push(`/super-admin/sale/${vente.sale_number}`)}
                         className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
-                        title={t('viewDetails')}
+                        title="Voir détails"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handlePrintReceipt(vente.id)}
                         className="p-1.5 text-green-600 hover:bg-green-50 rounded"
-                        title={t('print')}
+                        title="Imprimer"
                       >
                         <Printer className="w-4 h-4" />
                       </button>
@@ -1691,12 +1843,12 @@ export default function VentesPage() {
           <div className="text-center">
             <ShoppingBag className="w-12 h-12 text-gray-400 mx-auto mb-3" />
             <h3 className="text-lg font-medium text-gray-900 mb-1">
-              {t('noSalesFound')}
+              Aucune vente trouvée
             </h3>
             <p className="text-gray-500 text-sm mb-4">
               {activeFilters > 0
-                ? t('noSalesMatchFilters')
-                : t('startWithFirstSale')
+                ? "Aucune vente ne correspond aux filtres"
+                : "Commencez par créer votre première vente"
               }
             </p>
             <button
@@ -1704,7 +1856,7 @@ export default function VentesPage() {
               className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition text-sm"
             >
               <Plus className="w-4 h-4 mr-2" />
-              {t('newSale')}
+              Nouvelle vente
             </button>
           </div>
         </div>
