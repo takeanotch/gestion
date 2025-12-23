@@ -4879,7 +4879,7 @@ export default function UserOutflowDashboard() {
   }
 
   return (
-    <div className="p-4 max-w-7xl mx-auto space-y-6">
+    <div className="md:p-4 p- max-w-7xl mx-auto space-y-6">
       {/* Messages */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-3">
@@ -4924,8 +4924,24 @@ export default function UserOutflowDashboard() {
               </div>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-2">
+          <div className="hidden mt-2 lg:flex items-center space-x-2">
+            <button
+              onClick={handleRefresh}
+              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+              title="Rafraîchir"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+            <button
+              onClick={() => setShowOutflowModal(true)}
+              className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nouvelle sortie
+            </button>
+          </div> 
+        </div>
+          <div className="flex mt-2 lg:hidden items-center space-x-2">
             <button
               onClick={handleRefresh}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
@@ -4941,11 +4957,10 @@ export default function UserOutflowDashboard() {
               Nouvelle sortie
             </button>
           </div>
-        </div>
       </div>
 
       {/* Statistiques d'aujourd'hui */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Ventes CDF aujourd'hui */}
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">

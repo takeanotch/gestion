@@ -233,7 +233,7 @@
 // //       {/* Header */}
 // //       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
 // //         <div>
-// //           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
+// //           <h1 className="text-xl sm:text-xl md:text-2xl font-bold text-gray-900 flex items-center">
 // //             <ShoppingBag className="w-6 h-6 sm:w-7 sm:h-7 mr-3 text-gray-700" />
 // //             {t('mySalesToday')}
 // //           </h1>
@@ -272,7 +272,7 @@
 // //         <div className="bg-white rounded-lg border border-gray-200 p-4">
 // //           <div className="flex items-center justify-between">
 // //             <div>
-// //               <div className="text-2xl font-bold text-gray-900">{stats.totalVentes}</div>
+// //               <div className="text-xl md:text-2xl font-bold text-gray-900">{stats.totalVentes}</div>
 // //               <div className="text-sm text-gray-500">{t('totalSales')}</div>
 // //             </div>
 // //             <ShoppingBag className="w-8 h-8 text-blue-500" />
@@ -286,7 +286,7 @@
 // //         <div className="bg-white rounded-lg border border-gray-200 p-4">
 // //           <div className="flex items-center justify-between">
 // //             <div>
-// //               <div className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalMontantCDF)}</div>
+// //               <div className="text-xl md:text-2xl font-bold text-green-600">{formatCurrency(stats.totalMontantCDF)}</div>
 // //               <div className="text-sm text-gray-500">{t('totalInFrancs')}</div>
 // //             </div>
 // //             <span className="text-lg">FC</span>
@@ -299,7 +299,7 @@
 // //         <div className="bg-white rounded-lg border border-gray-200 p-4">
 // //           <div className="flex items-center justify-between">
 // //             <div>
-// //               <div className="text-2xl font-bold text-blue-600">$ {stats.totalMontantUSD?.toFixed(2) || '0.00'}</div>
+// //               <div className="text-xl md:text-2xl font-bold text-blue-600">$ {stats.totalMontantUSD?.toFixed(2) || '0.00'}</div>
 // //               <div className="text-sm text-gray-500">{t('totalInDollars')}</div>
 // //             </div>
 // //             <DollarSign className="w-6 h-6 text-blue-400" />
@@ -911,7 +911,7 @@
 //         {/* Header avec Tabs */}
 //         <div className="mb-6 flex items-center justify-between">
 //           <div>
-//             <h1 className="text-2xl font-bold text-gray-900">Tableau de bord des ventes</h1>
+//             <h1 className="text-xl md:text-2xl font-bold text-gray-900">Tableau de bord des ventes</h1>
 //             <p className="text-gray-600">Bienvenue, {currentUser.full_name}!</p>
 //           </div>
           
@@ -1295,7 +1295,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Total des ventes</p>
-//                   <p className="text-2xl font-bold text-gray-900 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
 //                     {loadingStats ? '...' : stats.totalVentes}
 //                   </p>
 //                 </div>
@@ -1314,7 +1314,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Total en Francs</p>
-//                   <p className="text-2xl font-bold text-green-600 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-green-600 mt-1">
 //                     {loadingStats ? '...' : formatCurrency(stats.totalMontantCDF, 'CDF')}
 //                   </p>
 //                 </div>
@@ -1332,7 +1332,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Total en Dollars</p>
-//                   <p className="text-2xl font-bold text-blue-600 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-blue-600 mt-1">
 //                     {loadingStats ? '...' : `$${stats.totalMontantUSD?.toFixed(2) || '0.00'}`}
 //                   </p>
 //                 </div>
@@ -1350,7 +1350,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Moyenne transaction</p>
-//                   <p className="text-2xl font-bold text-gray-900 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
 //                     {loadingStats ? '...' : formatCurrency(stats.averageTransaction, 'CDF')}
 //                   </p>
 //                 </div>
@@ -1769,7 +1769,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Total des ventes</p>
-//                   <p className="text-2xl font-bold text-gray-900 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
 //                     {loadingStats ? '...' : stats.totalVentes}
 //                   </p>
 //                 </div>
@@ -1788,7 +1788,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Total en Francs</p>
-//                   <p className="text-2xl font-bold text-green-600 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-green-600 mt-1">
 //                     {loadingStats ? '...' : formatCurrency(stats.totalMontantCDF, 'CDF')}
 //                   </p>
 //                 </div>
@@ -1806,7 +1806,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Total en Dollars</p>
-//                   <p className="text-2xl font-bold text-blue-600 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-blue-600 mt-1">
 //                     {loadingStats ? '...' : `$${stats.totalMontantUSD?.toFixed(2) || '0.00'}`}
 //                   </p>
 //                 </div>
@@ -1824,7 +1824,7 @@
 //               <div className="flex items-center justify-between">
 //                 <div>
 //                   <p className="text-sm text-gray-500">Moyenne transaction</p>
-//                   <p className="text-2xl font-bold text-gray-900 mt-1">
+//                   <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
 //                     {loadingStats ? '...' : formatCurrency(stats.averageTransaction, 'CDF')}
 //                   </p>
 //                 </div>
@@ -2585,7 +2585,7 @@ export default function VentesDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">Total des ventes</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">
+                  <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
                     {loadingStats ? '...' : stats.totalVentes}
                   </p>
                 </div>
@@ -2604,7 +2604,7 @@ export default function VentesDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">Total en Francs</p>
-                  <p className="text-2xl font-bold text-green-600 mt-1">
+                  <p className="text-xl md:text-2xl font-bold text-green-600 mt-1">
                     {loadingStats ? '...' : formatCurrency(stats.totalMontantCDF, 'CDF')}
                   </p>
                 </div>
@@ -2622,7 +2622,7 @@ export default function VentesDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">Total en Dollars</p>
-                  <p className="text-2xl font-bold text-blue-600 mt-1">
+                  <p className="text-xl md:text-2xl font-bold text-blue-600 mt-1">
                     {loadingStats ? '...' : `$${stats.totalMontantUSD?.toFixed(2) || '0.00'}`}
                   </p>
                 </div>
@@ -2640,7 +2640,7 @@ export default function VentesDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">Moyenne transaction</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">
+                  <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
                     {loadingStats ? '...' : formatCurrency(stats.averageTransaction, 'CDF')}
                   </p>
                 </div>
