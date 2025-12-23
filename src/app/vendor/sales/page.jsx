@@ -2049,7 +2049,7 @@ export default function VentesDashboard() {
                                 <td className="px-4 py-3 whitespace-nowrap">
                                   <div className="flex items-center space-x-1">
                                     <button
-                                      onClick={() => router.push(`/vendor/sales`)}
+                                      onClick={() => router.push(`/vendor/sale/${vente.sale_number}`)}
                                       className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition"
                                       title="Voir détails"
                                     >
@@ -2127,7 +2127,7 @@ export default function VentesDashboard() {
                               </div>
                               <div className="flex items-center space-x-1">
                                 <button
-                                  onClick={() => router.push(`/ventes/${vente.id}`)}
+                                  onClick={() => router.push(`/vendor/sale/${vente.sale_number}`)}
                                   className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
                                   title="Voir détails"
                                 >
@@ -2138,6 +2138,7 @@ export default function VentesDashboard() {
                                   className="p-1.5 text-green-600 hover:bg-green-50 rounded"
                                   title="Imprimer"
                                 >
+                                  
                                   <Printer className="w-4 h-4" />
                                 </button>
                               </div>
