@@ -3184,7 +3184,7 @@ export default function FactureGenerator({ saleData, onDownloadComplete }) {
     const pageWidth = 80
     
     // MARGES AUGMENTÉES - 5mm à gauche
-    const leftMargin = 10
+    const leftMargin = 7
     const rightMargin = 5
     
     // Positions X pour les colonnes (AJUSTÉES pour PU/PT)
@@ -3759,7 +3759,7 @@ export default function FactureGenerator({ saleData, onDownloadComplete }) {
       {!selectedPrinter && !printing && (
         <div className="mt-2 w-full">
           <p className="text-xs text-amber-600 text-center">
-            ⚠️ Sélectionnez d'abord une imprimante dans la page de gestion des imprimantes
+            ⚠️ Sélectionnez d&apos;abord une imprimante dans la page de gestion des imprimantes
           </p>
         </div>
       )}
@@ -3775,7 +3775,7 @@ export default function FactureGenerator({ saleData, onDownloadComplete }) {
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >
-                Télécharger l'application
+                Télécharger l&apos;application
               </a>
               , lancez-la puis rafraîchissez la page
             </p>
