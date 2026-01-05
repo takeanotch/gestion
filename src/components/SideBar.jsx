@@ -34,7 +34,8 @@ import {
   BarChart3,
   Users as UsersIcon,
   Printer,
-  Cog
+  Cog,
+  ShoppingBasket
 } from 'lucide-react'
 
 export default function Sidebar() {
@@ -139,12 +140,7 @@ export default function Sidebar() {
           roles: ['super-admin']
         },
         
-        {
-          title: t('reports'),
-          icon: BarChart3,
-          href: '/super-admin/mouvement',
-          roles: ['super-admin']
-        },
+       
         {
           title: t('client'),
           icon: Users,

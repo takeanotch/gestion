@@ -43,13 +43,77 @@
 //   const [showAnalyticsFilters, setShowAnalyticsFilters] = useState(false);
 //   const [analyticsDateRange, setAnalyticsDateRange] = useState('week');
   
-//   // Stats
+//   // Stats - MIS À JOUR : Ajout des données USD et suppression de bénéfice
 //   const [statsCards, setStatsCards] = useState([
-//     { id: 'sales', label: 'Chiffre d\'affaires', value: 0, icon: DollarSign, color: 'text-blue-500', bg: 'bg-blue-50', currency: true },
-//     { id: 'revenue', label: 'Bénéfice net', value: 0, icon: TrendingUp, color: 'text-green-500', bg: 'bg-green-50', currency: true },
-//     { id: 'transactions', label: 'Transactions', value: 0, icon: ShoppingCart, color: 'text-purple-500', bg: 'bg-purple-50', currency: false },
-//     { id: 'expenses', label: 'Dépenses', value: 0, icon: CreditCard, color: 'text-red-500', bg: 'bg-red-50', currency: true },
-//     { id: 'balance', label: 'Solde Total', value: 0, icon: Wallet, color: 'text-orange-500', bg: 'bg-orange-50', currency: true }
+//     { 
+//       id: 'revenue', 
+//       label: 'Recette CDF', 
+//       value: 0, 
+//       valueUsd: 0, 
+//       icon: DollarSign, 
+//       color: 'text-blue-500', 
+//       bg: 'bg-blue-50', 
+//       currency: true 
+//     },
+//     { 
+//       id: 'revenue_usd', 
+//       label: 'Recette USD', 
+//       value: 0, 
+//       valueUsd: 0, 
+//       icon: DollarSign, 
+//       color: 'text-green-500', 
+//       bg: 'bg-green-50', 
+//       currency: true 
+//     },
+//     { 
+//       id: 'transactions', 
+//       label: 'Transactions', 
+//       value: 0, 
+//       icon: ShoppingCart, 
+//       color: 'text-purple-500', 
+//       bg: 'bg-purple-50', 
+//       currency: false 
+//     },
+//     { 
+//       id: 'expenses', 
+//       label: 'Dépenses CDF', 
+//       value: 0, 
+//       valueUsd: 0, 
+//       icon: CreditCard, 
+//       color: 'text-red-500', 
+//       bg: 'bg-red-50', 
+//       currency: true 
+//     },
+//     { 
+//       id: 'expenses_usd', 
+//       label: 'Dépenses USD', 
+//       value: 0, 
+//       valueUsd: 0, 
+//       icon: CreditCard, 
+//       color: 'text-orange-500', 
+//       bg: 'bg-orange-50', 
+//       currency: true 
+//     },
+//     { 
+//       id: 'balance', 
+//       label: 'Solde CDF', 
+//       value: 0, 
+//       valueUsd: 0, 
+//       icon: Wallet, 
+//       color: 'text-indigo-500', 
+//       bg: 'bg-indigo-50', 
+//       currency: true 
+//     },
+//     { 
+//       id: 'balance_usd', 
+//       label: 'Solde USD', 
+//       value: 0, 
+//       valueUsd: 0, 
+//       icon: Wallet, 
+//       color: 'text-pink-500', 
+//       bg: 'bg-pink-50', 
+//       currency: true 
+//     }
 //   ]);
 
 //   // Fonctions utilitaires
@@ -173,7 +237,7 @@
 
 //       if (!vendors || vendors.length === 0) {
 //         setAllVendors([]);
-//         updateStatsCards(0, 0, 0, 0, 0);
+//         updateStatsCards(0, 0, 0, 0, 0, 0, 0, 0);
 //         setLoading(false);
 //         return;
 //       }
@@ -197,7 +261,7 @@
 //           const { data: sales, error: salesError } = await salesQuery;
 //           if (salesError) throw salesError;
 
-//           // Dépenses - CORRECTION ICI: Utiliser created_at au lieu de date
+//           // Dépenses
 //           let expensesQuery = supabase
 //             .from('cash_outflow')
 //             .select('id, amount, currency, created_at, date')
@@ -284,20 +348,24 @@
 //       const sortedUsers = usersWithFinancialData.sort((a, b) => b.revenue_cdf - a.revenue_cdf);
 
 //       // Calculer les totaux
-//       const totalSalesCDF = sortedUsers.reduce((sum, user) => sum + user.total_sales_cdf, 0);
 //       const totalRevenueCDF = sortedUsers.reduce((sum, user) => sum + user.revenue_cdf, 0);
+//       const totalRevenueUSD = sortedUsers.reduce((sum, user) => sum + user.revenue_usd, 0);
 //       const totalExpensesCDF = sortedUsers.reduce((sum, user) => sum + user.total_expenses_cdf, 0);
+//       const totalExpensesUSD = sortedUsers.reduce((sum, user) => sum + user.total_expenses_usd, 0);
 //       const totalBalanceCDF = sortedUsers.reduce((sum, user) => sum + user.balance_cdf, 0);
+//       const totalBalanceUSD = sortedUsers.reduce((sum, user) => sum + user.balance_usd, 0);
 //       const totalTransactions = sortedUsers.reduce((sum, user) => sum + user.sales_count, 0);
 
 //       // Mettre à jour les états
 //       setAllVendors(sortedUsers);
 //       updateStatsCards(
-//         totalSalesCDF,
 //         totalRevenueCDF,
+//         totalRevenueUSD,
 //         totalTransactions,
 //         totalExpensesCDF,
-//         totalBalanceCDF
+//         totalExpensesUSD,
+//         totalBalanceCDF,
+//         totalBalanceUSD
 //       );
 
 //     } catch (error) {
@@ -307,14 +375,86 @@
 //     }
 //   };
 
-//   // Mettre à jour les cards de stats
-//   const updateStatsCards = (sales, revenue, transactions, expenses, balance) => {
+//   // Mettre à jour les cards de stats - MIS À JOUR
+//   const updateStatsCards = (
+//     revenueCDF, 
+//     revenueUSD, 
+//     transactions, 
+//     expensesCDF, 
+//     expensesUSD, 
+//     balanceCDF, 
+//     balanceUSD
+//   ) => {
 //     setStatsCards([
-//       { id: 'sales', label: 'Chiffre d\'affaires', value: sales, icon: DollarSign, color: 'text-blue-500', bg: 'bg-blue-50', currency: true },
-//       { id: 'revenue', label: 'Bénéfice net', value: revenue, icon: TrendingUp, color: 'text-green-500', bg: 'bg-green-50', currency: true },
-//       { id: 'transactions', label: 'Transactions', value: transactions, icon: ShoppingCart, color: 'text-purple-500', bg: 'bg-purple-50', currency: false },
-//       { id: 'expenses', label: 'Dépenses', value: expenses, icon: CreditCard, color: 'text-red-500', bg: 'bg-red-50', currency: true },
-//       { id: 'balance', label: 'Solde Total', value: balance, icon: Wallet, color: 'text-orange-500', bg: 'bg-orange-50', currency: true }
+//       { 
+//         id: 'revenue', 
+//         label: 'Recette CDF', 
+//         value: revenueCDF, 
+//         valueUsd: revenueUSD, 
+//         icon: DollarSign, 
+//         color: 'text-blue-500', 
+//         bg: 'bg-blue-50', 
+//         currency: true 
+//       },
+//       { 
+//         id: 'revenue_usd', 
+//         label: 'Recette USD', 
+//         value: revenueUSD, 
+//         valueUsd: revenueUSD, 
+//         icon: DollarSign, 
+//         color: 'text-green-500', 
+//         bg: 'bg-green-50', 
+//         currency: true 
+//       },
+//       { 
+//         id: 'transactions', 
+//         label: 'Transactions', 
+//         value: transactions, 
+//         icon: ShoppingCart, 
+//         color: 'text-purple-500', 
+//         bg: 'bg-purple-50', 
+//         currency: false 
+//       },
+//       { 
+//         id: 'expenses', 
+//         label: 'Dépenses CDF', 
+//         value: expensesCDF, 
+//         valueUsd: expensesUSD, 
+//         icon: CreditCard, 
+//         color: 'text-red-500', 
+//         bg: 'bg-red-50', 
+//         currency: true 
+//       },
+//       { 
+//         id: 'expenses_usd', 
+//         label: 'Dépenses USD', 
+//         value: expensesUSD, 
+//         valueUsd: expensesUSD, 
+//         icon: CreditCard, 
+//         color: 'text-orange-500', 
+//         bg: 'bg-orange-50', 
+//         currency: true 
+//       },
+//       { 
+//         id: 'balance', 
+//         label: 'Solde CDF', 
+//         value: balanceCDF, 
+//         valueUsd: balanceUSD, 
+//         icon: Wallet, 
+//         color: 'text-indigo-500', 
+//         bg: 'bg-indigo-50', 
+//         currency: true 
+//       },
+//       { 
+//         id: 'balance_usd', 
+//         label: 'Solde USD', 
+//         value: balanceUSD, 
+//         valueUsd: balanceUSD, 
+//         icon: Wallet, 
+//         color: 'text-pink-500', 
+//         bg: 'bg-pink-50', 
+//         currency: true 
+//       }
 //     ]);
 //   };
 
@@ -344,25 +484,42 @@
 //     fetchVendorsData();
 //   };
 
-//   // Composant pour les cards de stats
+//   // Composant pour les cards de stats - MIS À JOUR
 //   const StatsCards = () => (
-//     <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+//     <div className="grid grid-cols-2 md:grid-cols-7 gap-3 mb-6">
 //       {statsCards.map((card) => (
-//         <div key={card.id} className="bg-white p-3 rounded-lg border border-gray-200">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-xs text-gray-500">{card.label}</p>
-//               <p className={`text-sm font-semibold ${
-//                 card.id === 'revenue' ? 'text-green-600' :
-//                 card.id === 'expenses' ? 'text-red-600' :
-//                 card.id === 'balance' ? (card.value >= 0 ? 'text-green-600' : 'text-red-600') :
+//         <div key={card.id} className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+//           <div className="flex flex-col h-full">
+//             <div className="flex items-start justify-between mb-2">
+//               <div>
+//                 <p className="text-xs font-medium text-gray-700">{card.label}</p>
+//               </div>
+//               <div className={`p-1.5 rounded-md ${card.bg}`}>
+//                 <card.icon className={`w-3.5 h-3.5 ${card.color}`} />
+//               </div>
+//             </div>
+            
+//             <div className="mt-auto">
+//               <p className={`text-sm font-bold mb-1 ${
+//                 card.id.includes('revenue') ? 'text-blue-600' :
+//                 card.id.includes('expenses') ? 'text-red-600' :
+//                 card.id.includes('balance') ? (card.value >= 0 ? 'text-green-600' : 'text-red-600') :
 //                 'text-gray-900'
 //               }`}>
-//                 {card.currency ? formatCurrency(card.value) : formatNumber(card.value)}
+//                 {card.currency 
+//                   ? (card.id.includes('_usd') 
+//                     ? formatCurrency(card.value, 'USD')
+//                     : formatCurrency(card.value, 'CDF'))
+//                   : formatNumber(card.value)
+//                 }
 //               </p>
-//             </div>
-//             <div className={`p-2 rounded-lg ${card.bg}`}>
-//               <card.icon className={`w-4 h-4 ${card.color}`} />
+              
+//               {/* Afficher la contrepartie en devise alternative pour les cartes principales */}
+//               {card.currency && !card.id.includes('_usd') && card.valueUsd > 0 && (
+//                 <p className="text-xs text-gray-500">
+//                   {formatCurrency(card.valueUsd, 'USD')}
+//                 </p>
+//               )}
 //             </div>
 //           </div>
 //         </div>
@@ -517,59 +674,55 @@
 
 //                   {/* Stats minimales */}
 //                   <div className="space-y-3">
-//                     {/* Ventes et Recette */}
+//                     {/* Recette CDF et USD */}
 //                     <div className="grid grid-cols-2 gap-2">
 //                       <div>
-//                         <p className="text-xs text-gray-500 mb-1">Ventes</p>
-//                         <p className="text-sm font-medium text-gray-900">
-//                           {formatCurrency(user.total_sales_cdf || 0)}
-//                         </p>
-//                         {user.total_sales_usd > 0 && (
-//                           <p className="text-xs text-gray-500">
-//                             {formatCurrency(user.total_sales_usd, 'USD')}
-//                           </p>
-//                         )}
-//                       </div>
-//                       <div>
-//                         <p className="text-xs text-gray-500 mb-1">Recette</p>
+//                         <p className="text-xs text-gray-500 mb-1">Recette CDF</p>
 //                         <p className="text-sm font-medium text-blue-600">
 //                           {formatCurrency(user.revenue_cdf || 0)}
 //                         </p>
-//                         {user.revenue_usd > 0 && (
-//                           <p className="text-xs text-blue-500">
-//                             {formatCurrency(user.revenue_usd, 'USD')}
-//                           </p>
-//                         )}
+//                       </div>
+//                       <div>
+//                         <p className="text-xs text-gray-500 mb-1">Recette USD</p>
+//                         <p className="text-sm font-medium text-green-600">
+//                           {user.revenue_usd > 0 ? formatCurrency(user.revenue_usd, 'USD') : '—'}
+//                         </p>
 //                       </div>
 //                     </div>
 
-//                     {/* Dépenses et Solde */}
+//                     {/* Dépenses CDF et USD */}
 //                     <div className="grid grid-cols-2 gap-2">
 //                       <div>
-//                         <p className="text-xs text-gray-500 mb-1">Dépenses</p>
+//                         <p className="text-xs text-gray-500 mb-1">Dépenses CDF</p>
 //                         <p className="text-sm font-medium text-red-600">
 //                           {formatCurrency(user.total_expenses_cdf || 0)}
 //                         </p>
-//                         {user.total_expenses_usd > 0 && (
-//                           <p className="text-xs text-red-500">
-//                             {formatCurrency(user.total_expenses_usd, 'USD')}
-//                           </p>
-//                         )}
 //                       </div>
 //                       <div>
-//                         <p className="text-xs text-gray-500 mb-1">Solde</p>
+//                         <p className="text-xs text-gray-500 mb-1">Dépenses USD</p>
+//                         <p className="text-sm font-medium text-orange-600">
+//                           {user.total_expenses_usd > 0 ? formatCurrency(user.total_expenses_usd, 'USD') : '—'}
+//                         </p>
+//                       </div>
+//                     </div>
+
+//                     {/* Solde CDF et USD */}
+//                     <div className="grid grid-cols-2 gap-2">
+//                       <div>
+//                         <p className="text-xs text-gray-500 mb-1">Solde CDF</p>
 //                         <p className={`text-sm font-medium ${
-//                           (user.balance_cdf || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+//                           (user.balance_cdf || 0) >= 0 ? 'text-indigo-600' : 'text-red-600'
 //                         }`}>
 //                           {formatCurrency(user.balance_cdf || 0)}
 //                         </p>
-//                         {user.balance_usd !== 0 && (
-//                           <p className={`text-xs ${
-//                             user.balance_usd >= 0 ? 'text-green-500' : 'text-red-500'
-//                           }`}>
-//                             {formatCurrency(Math.abs(user.balance_usd), 'USD')}
-//                           </p>
-//                         )}
+//                       </div>
+//                       <div>
+//                         <p className="text-xs text-gray-500 mb-1">Solde USD</p>
+//                         <p className={`text-sm font-medium ${
+//                           user.balance_usd >= 0 ? 'text-pink-600' : 'text-red-600'
+//                         }`}>
+//                           {user.balance_usd !== 0 ? formatCurrency(Math.abs(user.balance_usd), 'USD') : '—'}
+//                         </p>
 //                       </div>
 //                     </div>
 //                   </div>
@@ -738,7 +891,6 @@
 //     </div>
 //   );
 // }
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -759,9 +911,14 @@ import {
   Target,
   Wallet,
   User,
-  Grid
+  Grid,
+  Download,
+  FileText,
+  FileSpreadsheet,
+  FileType
 } from 'lucide-react';
 import UsersSalesAnalytics from '../mouvement/page';
+import * as XLSX from 'xlsx';
 
 export default function CombinedUsersAnalytics() {
   // États simplifiés
@@ -782,6 +939,9 @@ export default function CombinedUsersAnalytics() {
   // États filtres Analytics
   const [showAnalyticsFilters, setShowAnalyticsFilters] = useState(false);
   const [analyticsDateRange, setAnalyticsDateRange] = useState('week');
+
+  // État pour le téléchargement
+  const [downloading, setDownloading] = useState(false);
   
   // Stats - MIS À JOUR : Ajout des données USD et suppression de bénéfice
   const [statsCards, setStatsCards] = useState([
@@ -939,6 +1099,26 @@ export default function CombinedUsersAnalytics() {
     }
     
     return { startDate, endDate };
+  };
+
+  // Fonction pour obtenir le texte de la période sélectionnée
+  const getDateRangeText = () => {
+    if (listDateRange === 'all') {
+      if (listCustomStart && listCustomEnd) {
+        return `Période personnalisée: ${formatDate(listCustomStart)} au ${formatDate(listCustomEnd)}`;
+      }
+      return 'Toute période';
+    }
+    
+    const periods = {
+      'today': "Aujourd'hui",
+      'yesterday': 'Hier',
+      'week': '7 derniers jours',
+      'month': '30 derniers jours',
+      'year': '12 derniers mois'
+    };
+    
+    return periods[listDateRange];
   };
 
   // Fonction principale pour charger les données
@@ -1198,6 +1378,336 @@ export default function CombinedUsersAnalytics() {
     ]);
   };
 
+  // Fonctions de téléchargement de rapport
+  const downloadPDFReport = async () => {
+    try {
+      setDownloading(true);
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF();
+      
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 15;
+      
+      // Titre
+      doc.setFontSize(16);
+      doc.text('RAPPORT DES VENDEURS', pageWidth / 2, 20, { align: 'center' });
+      
+      // Date et période
+      doc.setFontSize(10);
+      const dateText = `Date du rapport: ${new Date().toLocaleDateString('fr-FR')}`;
+      const periodText = `Période: ${getDateRangeText()}`;
+      doc.text(dateText, margin, 35);
+      doc.text(periodText, margin, 42);
+      
+      // Statistiques globales
+      doc.setFontSize(12);
+      doc.text('STATISTIQUES GLOBALES', margin, 55);
+      
+      let yPos = 65;
+      statsCards.forEach((stat, index) => {
+        const row = Math.floor(index / 2);
+        const col = index % 2;
+        const xPos = margin + (col * (pageWidth / 2 - margin));
+        
+        doc.setFontSize(10);
+        doc.text(stat.label, xPos, yPos + (row * 8));
+        
+        doc.setFontSize(11);
+        const valueText = stat.currency 
+          ? formatCurrency(stat.value, stat.id.includes('_usd') ? 'USD' : 'CDF')
+          : formatNumber(stat.value);
+        
+        doc.text(valueText, xPos, yPos + (row * 8) + 5);
+      });
+      
+      // Liste des vendeurs
+      doc.addPage();
+      doc.setFontSize(14);
+      doc.text('LISTE DÉTAILLÉE DES VENDEURS', margin, 20);
+      
+      if (allVendors.length === 0) {
+        doc.setFontSize(11);
+        doc.text('Aucun vendeur trouvé pour cette période', margin, 35);
+      } else {
+        let tableY = 35;
+        const columnWidths = [40, 60, 30, 30, 30];
+        const headers = ['Nom', 'Boutique', 'Ventes', 'Recette CDF', 'Recette USD'];
+        
+        // En-têtes du tableau
+        doc.setFontSize(10);
+        let xPos = margin;
+        headers.forEach((header, i) => {
+          doc.text(header, xPos, tableY);
+          xPos += columnWidths[i];
+        });
+        
+        tableY += 8;
+        doc.line(margin, tableY - 2, pageWidth - margin, tableY - 2);
+        
+        // Données des vendeurs
+        doc.setFontSize(9);
+        allVendors.forEach((user, index) => {
+          if (tableY > 270) {
+            doc.addPage();
+            tableY = 20;
+          }
+          
+          xPos = margin;
+          const rowData = [
+            user.full_name || 'N/A',
+            user.shop_name || 'N/A',
+            user.sales_count.toString(),
+            formatCurrency(user.revenue_cdf || 0),
+            user.revenue_usd > 0 ? formatCurrency(user.revenue_usd, 'USD') : '—'
+          ];
+          
+          rowData.forEach((text, i) => {
+            doc.text(text.toString().substring(0, 20), xPos, tableY);
+            xPos += columnWidths[i];
+          });
+          
+          tableY += 8;
+        });
+        
+        // Totaux
+        tableY += 10;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        doc.text('TOTAUX:', margin, tableY);
+        doc.text(`Total Vendeurs: ${allVendors.length}`, margin + 100, tableY);
+        doc.text(`Total Transactions: ${formatNumber(statsCards.find(s => s.id === 'transactions')?.value || 0)}`, margin + 150, tableY);
+        
+        tableY += 8;
+        doc.text(`Recette Total CDF: ${formatCurrency(statsCards.find(s => s.id === 'revenue')?.value || 0)}`, margin + 100, tableY);
+        doc.text(`Recette Total USD: ${formatCurrency(statsCards.find(s => s.id === 'revenue_usd')?.value || 0, 'USD')}`, margin + 150, tableY);
+      }
+      
+      // Pied de page
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(8);
+      doc.text(`Généré le: ${new Date().toLocaleString('fr-FR')}`, pageWidth / 2, 285, { align: 'center' });
+      
+      // Télécharger
+      doc.save(`rapport-vendeurs-${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+      console.error('Erreur lors de la génération du PDF:', error);
+      alert('Erreur lors de la génération du rapport PDF');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const downloadExcelReport = () => {
+    try {
+      setDownloading(true);
+      
+      // Préparer les données pour Excel
+      const worksheetData = [];
+      
+      // En-tête
+      worksheetData.push(['RAPPORT DES VENDEURS']);
+      worksheetData.push(['']);
+      worksheetData.push(['Date du rapport:', new Date().toLocaleDateString('fr-FR')]);
+      worksheetData.push(['Période:', getDateRangeText()]);
+      worksheetData.push(['']);
+      
+      // Statistiques globales
+      worksheetData.push(['STATISTIQUES GLOBALES']);
+      statsCards.forEach(stat => {
+        const value = stat.currency 
+          ? formatCurrency(stat.value, stat.id.includes('_usd') ? 'USD' : 'CDF')
+          : formatNumber(stat.value);
+        worksheetData.push([stat.label, value]);
+      });
+      worksheetData.push(['']);
+      
+      // Liste détaillée des vendeurs
+      worksheetData.push(['LISTE DÉTAILLÉE DES VENDEURS']);
+      worksheetData.push([
+        'Nom',
+        'Boutique',
+        'Email',
+        'Téléphone',
+        'Ventes',
+        'Dépenses',
+        'Recette CDF',
+        'Recette USD',
+        'Dépenses CDF',
+        'Dépenses USD',
+        'Solde CDF',
+        'Solde USD',
+        'Dernière vente',
+        'Dernière dépense'
+      ]);
+      
+      allVendors.forEach(user => {
+        worksheetData.push([
+          user.full_name || '',
+          user.shop_name || '',
+          user.email || '',
+          user.phone || '',
+          user.sales_count || 0,
+          user.expenses_count || 0,
+          user.revenue_cdf || 0,
+          user.revenue_usd || 0,
+          user.total_expenses_cdf || 0,
+          user.total_expenses_usd || 0,
+          user.balance_cdf || 0,
+          user.balance_usd || 0,
+          user.last_sale ? formatDate(user.last_sale) : '',
+          user.last_expense ? formatDate(user.last_expense) : ''
+        ]);
+      });
+      
+      // Totaux
+      worksheetData.push(['']);
+      worksheetData.push(['TOTAUX']);
+      worksheetData.push(['Total Vendeurs:', allVendors.length]);
+      worksheetData.push(['Total Transactions:', statsCards.find(s => s.id === 'transactions')?.value || 0]);
+      worksheetData.push(['Recette Total CDF:', statsCards.find(s => s.id === 'revenue')?.value || 0]);
+      worksheetData.push(['Recette Total USD:', statsCards.find(s => s.id === 'revenue_usd')?.value || 0]);
+      worksheetData.push(['Dépenses Total CDF:', statsCards.find(s => s.id === 'expenses')?.value || 0]);
+      worksheetData.push(['Dépenses Total USD:', statsCards.find(s => s.id === 'expenses_usd')?.value || 0]);
+      
+      // Créer le workbook et la worksheet
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+      
+      // Ajuster la largeur des colonnes
+      const colWidths = [
+        { wch: 25 }, // Nom
+        { wch: 20 }, // Boutique
+        { wch: 30 }, // Email
+        { wch: 15 }, // Téléphone
+        { wch: 10 }, // Ventes
+        { wch: 10 }, // Dépenses
+        { wch: 15 }, // Recette CDF
+        { wch: 15 }, // Recette USD
+        { wch: 15 }, // Dépenses CDF
+        { wch: 15 }, // Dépenses USD
+        { wch: 15 }, // Solde CDF
+        { wch: 15 }, // Solde USD
+        { wch: 15 }, // Dernière vente
+        { wch: 15 }  // Dernière dépense
+      ];
+      ws['!cols'] = colWidths;
+      
+      XLSX.utils.book_append_sheet(wb, ws, 'Rapport Vendeurs');
+      
+      // Télécharger
+      XLSX.writeFile(wb, `rapport-vendeurs-${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (error) {
+      console.error('Erreur lors de la génération Excel:', error);
+      alert('Erreur lors de la génération du rapport Excel');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const downloadTextReport = () => {
+    try {
+      setDownloading(true);
+      
+      let textContent = '='.repeat(60) + '\n';
+      textContent += 'RAPPORT DES VENDEURS\n';
+      textContent += '='.repeat(60) + '\n\n';
+      
+      textContent += `Date du rapport: ${new Date().toLocaleDateString('fr-FR')}\n`;
+      textContent += `Période: ${getDateRangeText()}\n`;
+      textContent += `Généré le: ${new Date().toLocaleString('fr-FR')}\n\n`;
+      
+      textContent += '-' .repeat(60) + '\n';
+      textContent += 'STATISTIQUES GLOBALES\n';
+      textContent += '-' .repeat(60) + '\n';
+      
+      statsCards.forEach(stat => {
+        const value = stat.currency 
+          ? formatCurrency(stat.value, stat.id.includes('_usd') ? 'USD' : 'CDF')
+          : formatNumber(stat.value);
+        textContent += `${stat.label.padEnd(25)}: ${value}\n`;
+      });
+      
+      textContent += '\n' + '='.repeat(60) + '\n';
+      textContent += `LISTE DES VENDEURS (${allVendors.length} au total)\n`;
+      textContent += '='.repeat(60) + '\n\n';
+      
+      if (allVendors.length === 0) {
+        textContent += 'Aucun vendeur trouvé pour cette période.\n';
+      } else {
+        allVendors.forEach((user, index) => {
+          textContent += `\n[${index + 1}] ${user.full_name}\n`;
+          textContent += `   ${'-'.repeat(50)}\n`;
+          
+          if (user.shop_name) {
+            textContent += `   Boutique   : ${user.shop_name}\n`;
+          }
+          if (user.email) {
+            textContent += `   Email      : ${user.email}\n`;
+          }
+          if (user.phone) {
+            textContent += `   Téléphone  : ${user.phone}\n`;
+          }
+          
+          textContent += `   Ventes     : ${user.sales_count}\n`;
+          textContent += `   Dépenses   : ${user.expenses_count}\n`;
+          textContent += `   Recette CDF: ${formatCurrency(user.revenue_cdf || 0)}\n`;
+          
+          if (user.revenue_usd > 0) {
+            textContent += `   Recette USD: ${formatCurrency(user.revenue_usd, 'USD')}\n`;
+          }
+          
+          textContent += `   Dépenses CDF: ${formatCurrency(user.total_expenses_cdf || 0)}\n`;
+          
+          if (user.total_expenses_usd > 0) {
+            textContent += `   Dépenses USD: ${formatCurrency(user.total_expenses_usd, 'USD')}\n`;
+          }
+          
+          textContent += `   Solde CDF   : ${formatCurrency(user.balance_cdf || 0)}\n`;
+          
+          if (user.balance_usd !== 0) {
+            textContent += `   Solde USD   : ${formatCurrency(Math.abs(user.balance_usd), 'USD')}\n`;
+          }
+          
+          if (user.last_sale) {
+            textContent += `   Dernière vente : ${formatDate(user.last_sale)}\n`;
+          }
+          
+          if (user.last_expense) {
+            textContent += `   Dernière dépense: ${formatDate(user.last_expense)}\n`;
+          }
+        });
+      }
+      
+      textContent += '\n' + '='.repeat(60) + '\n';
+      textContent += 'RÉSUMÉ\n';
+      textContent += '='.repeat(60) + '\n';
+      textContent += `Total vendeurs           : ${allVendors.length}\n`;
+      textContent += `Total transactions       : ${formatNumber(statsCards.find(s => s.id === 'transactions')?.value || 0)}\n`;
+      textContent += `Recette totale CDF       : ${formatCurrency(statsCards.find(s => s.id === 'revenue')?.value || 0)}\n`;
+      textContent += `Recette totale USD       : ${formatCurrency(statsCards.find(s => s.id === 'revenue_usd')?.value || 0, 'USD')}\n`;
+      textContent += `Dépenses totales CDF     : ${formatCurrency(statsCards.find(s => s.id === 'expenses')?.value || 0)}\n`;
+      textContent += `Dépenses totales USD     : ${formatCurrency(statsCards.find(s => s.id === 'expenses_usd')?.value || 0, 'USD')}\n`;
+      textContent += `Solde total CDF          : ${formatCurrency(statsCards.find(s => s.id === 'balance')?.value || 0)}\n`;
+      textContent += `Solde total USD          : ${formatCurrency(statsCards.find(s => s.id === 'balance_usd')?.value || 0, 'USD')}\n`;
+      
+      // Créer et télécharger le fichier texte
+      const blob = new Blob([textContent], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rapport-vendeurs-${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erreur lors de la génération texte:', error);
+      alert('Erreur lors de la génération du rapport texte');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   // Charger les données au montage et quand les filtres changent
   useEffect(() => {
     fetchVendorsData();
@@ -1267,6 +1777,60 @@ export default function CombinedUsersAnalytics() {
     </div>
   );
 
+  // Menu déroulant pour téléchargement
+  const DownloadMenu = () => (
+    <div className="relative inline-block">
+      <button
+        disabled={downloading || allVendors.length === 0}
+        className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border ${
+          downloading || allVendors.length === 0
+            ? 'bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed'
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+        }`}
+      >
+        {downloading ? (
+          <>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            Génération...
+          </>
+        ) : (
+          <>
+            <Download className="w-4 h-4" />
+            Télécharger
+          </>
+        )}
+      </button>
+      
+      {!downloading && allVendors.length > 0 && (
+        <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10 hidden group-hover:block">
+          <div className="py-1">
+            <button
+              onClick={downloadPDFReport}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FileText className="w-4 h-4" />
+              PDF (.pdf)
+            </button>
+            <button
+              onClick={downloadExcelReport}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              Excel (.xlsx)
+            </button>
+            <button
+              onClick={downloadTextReport}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FileType className="w-4 h-4" />
+              Texte (.txt)
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   // Render List Tab - Version simplifiée et fonctionnelle
   const renderListTab = () => {
     return (
@@ -1277,16 +1841,23 @@ export default function CombinedUsersAnalytics() {
         {/* Filtres pour Liste */}
         {showListFilters && (
           <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
-            {/* Barre de recherche */}
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Rechercher un vendeur..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleListSearch(e)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+              {/* Barre de recherche */}
+              <div className="flex-1">
+                <input
+                  type="text"
+                  placeholder="Rechercher un vendeur..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleListSearch(e)}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Bouton Télécharger */}
+              <div className="group relative">
+                <DownloadMenu />
+              </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-4">
@@ -1347,6 +1918,11 @@ export default function CombinedUsersAnalytics() {
                   Reset
                 </button>
               </div>
+            </div>
+            
+            {/* Indicateur de période active */}
+            <div className="mt-3 text-xs text-gray-600">
+              <span className="font-medium">Période sélectionnée:</span> {getDateRangeText()}
             </div>
           </div>
         )}
@@ -1549,6 +2125,14 @@ export default function CombinedUsersAnalytics() {
       <div className="space-y-6">
         {/* Cards de stats pour Analytics */}
         <StatsCards />
+        
+        {/* Bouton télécharger pour Analytics */}
+        <div className="flex justify-end">
+          <div className="group relative">
+            <DownloadMenu />
+          </div>
+        </div>
+        
         <UsersSalesAnalytics/>
         {/* Onglets Analytics internes */}
       </div>
